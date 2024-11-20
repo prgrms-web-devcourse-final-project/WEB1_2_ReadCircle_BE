@@ -5,9 +5,16 @@ import lombok.extern.log4j.Log4j2;
 import org.prgrms.devcourse.readcircle.domain.post.dto.PostDTO;
 import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.domain.post.service.PostServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -17,9 +24,23 @@ import java.util.List;
 public class PostController {
     private final PostServiceImpl postServiceImpl;
 
+    @Value("${post.image.upload.path}")
+    private String uploadPath;
+
     //게시글 등록
     @PostMapping("/create")
-    public ResponseEntity<PostDTO> create(@RequestBody PostDTO postDTO){
+    public ResponseEntity<PostDTO> create(
+            @RequestPart(name = "postDTO") PostDTO postDTO,
+            @RequestPart(name = "bookImage", required = false) MultipartFile bookImage
+        ) throws IOException {
+
+
+        if(bookImage != null && !bookImage.isEmpty()){
+            String fileName = System.currentTimeMillis() + "_" + bookImage.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+            Path filePath = Paths.get(uploadPath, fileName);
+            bookImage.transferTo(filePath.toFile());
+            postDTO.setBookImage(filePath.toString());
+        }
         return ResponseEntity.ok(postServiceImpl.register(postDTO));
     }
 

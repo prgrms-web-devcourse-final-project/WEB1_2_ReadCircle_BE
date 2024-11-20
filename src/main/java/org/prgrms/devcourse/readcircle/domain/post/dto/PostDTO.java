@@ -22,6 +22,7 @@ public class PostDTO {
     private String title;
     private String content;
     private int price;
+    private String bookImage;
     private BookCategory bookCategory;
     private BookCondition bookCondition;
     private TradeType tradeType;
@@ -43,6 +44,7 @@ public class PostDTO {
                 .title(title)
                 .content(content)
                 .price(price)
+                .bookImage(bookImage)
                 .bookCategory(bookCategory)
                 .bookCondition(bookCondition)
                 .tradeType(tradeType)
@@ -58,6 +60,7 @@ public class PostDTO {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.price = post.getPrice();
+        this.bookImage = post.getBookImage();
         this.bookCategory = post.getBookCategory();
         this.bookCondition = post.getBookCondition();
         this.tradeType = post.getTradeType();
