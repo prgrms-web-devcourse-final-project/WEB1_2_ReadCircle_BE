@@ -2,6 +2,7 @@ package org.prgrms.devcourse.readcircle.domain.post.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.prgrms.devcourse.readcircle.common.util.PagingUtil;
 import org.prgrms.devcourse.readcircle.domain.post.dto.PostDTO;
 import org.prgrms.devcourse.readcircle.domain.post.entity.Post;
 import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
@@ -11,6 +12,9 @@ import org.prgrms.devcourse.readcircle.domain.user.entity.User;
 import org.prgrms.devcourse.readcircle.domain.user.exception.UserException;
 import org.prgrms.devcourse.readcircle.domain.user.repository.UserFindRepository;
 import org.prgrms.devcourse.readcircle.domain.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,7 @@ import java.util.List;
 public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final UserFindRepository userFindRepository;
+    private final PagingUtil pagingUtil;
 
     //게시글 등록
     @Override
@@ -49,45 +54,33 @@ public class PostServiceImpl implements PostService{
 
     //게시글 전체 조회
     @Override
-    public List<PostDTO> readAll(){
-        List<Post> postList = postRepository.findAll();
-        List<PostDTO> postDTOList = new ArrayList<>();
-        for(Post post : postList){
-            postDTOList.add(new PostDTO(post));
-        }
+    public Page<PostDTO> readAll(String sortType, String order){
+        Pageable pageable = pagingUtil.getPageable(sortType, order);
+        Page<PostDTO> postDTOList = postRepository.getAll(pageable);
         return postDTOList;
     }
 
     //게시글 사용자 아이디로 조회
     @Override
-    public List<PostDTO> readByUserId(String userId){
-        List<Post> postList = postRepository.getPostByUserId(userId).orElse(null);
-        List<PostDTO> postDTOList = new ArrayList<>();
-        for(Post post : postList){
-            postDTOList.add(new PostDTO(post));
-        }
-        return postDTOList;
+    public Page<PostDTO> readByUserId(String userId, String sortType, String order){
+        Pageable pageable = pagingUtil.getPageable(sortType, order);
+        Page<PostDTO> postList = postRepository.getPostByUserId(userId, pageable);
+        return postList;
     }
 
     //키워드(제목)로 게시글 조회
     @Override
-    public List<PostDTO> readByKeyword(String keyword){
-        List<Post> postList = postRepository.getPostByKeyword(keyword).orElse(null);
-        List<PostDTO> postDTOList = new ArrayList<>();
-        for(Post post : postList){
-            postDTOList.add(new PostDTO(post));
-        }
+    public Page<PostDTO> readByKeyword(String keyword, String sortType, String order){
+        Pageable pageable = pagingUtil.getPageable(sortType, order);
+        Page<PostDTO> postDTOList = postRepository.getPostByKeyword(keyword, pageable);
         return postDTOList;
     }
 
     //카테고리로 게시글 조회
     @Override
-    public List<PostDTO> readByCategory(BookCategory bookCategory){
-        List<Post> postList = postRepository.getPostByCategory(bookCategory).orElse(null);
-        List<PostDTO> postDTOList = new ArrayList<>();
-        for(Post post : postList){
-            postDTOList.add(new PostDTO(post));
-        }
+    public Page<PostDTO> readByCategory(BookCategory bookCategory, String sortType, String order){
+        Pageable pageable = pagingUtil.getPageable(sortType, order);
+        Page<PostDTO> postDTOList = postRepository.getPostByCategory(bookCategory, pageable);
         return postDTOList;
     }
 

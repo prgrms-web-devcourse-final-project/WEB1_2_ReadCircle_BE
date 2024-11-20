@@ -28,6 +28,7 @@ public class Post {
     private String title;
     private String content;
     private int price;
+    private String bookImage;
     private boolean tradeStatus;
 
     @Enumerated(EnumType.STRING)
