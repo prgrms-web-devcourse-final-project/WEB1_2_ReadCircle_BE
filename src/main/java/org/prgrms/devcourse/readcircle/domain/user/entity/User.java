@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.BaseTimeEntity;
 import org.prgrms.devcourse.readcircle.domain.user.value.Role;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -16,12 +17,12 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "userId", unique = true)
     private String userId;
 
     private String password;
 
     @Column(name = "email", nullable = false, unique = true, length = 100)
-//    @Pattern(regexp = "^(?=.{1,100}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "이메일 형식이 올바르지 않습니다.")
     private String email;
 
     @Column(name = "nickname", nullable = false, length = 30)
@@ -44,6 +45,24 @@ public class User extends BaseTimeEntity {
         this.profileImageUrl = profileImageUrl;
     }
 
+    public void changeProfileImageUrl(final String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
 
 
+    public void changeNickname(final String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void changeRole(Role role) {
+        this.role = role;
+    }
+
+    public void changePassword(String newPassword, PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(newPassword);  // 비밀번호 암호화 후 변경
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
 }
