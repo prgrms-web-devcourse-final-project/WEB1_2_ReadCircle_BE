@@ -171,3 +171,5 @@ gradle-app.setting
 
 ### application.properties파일
 /src/main/resources/application.properties
+
+.idea/

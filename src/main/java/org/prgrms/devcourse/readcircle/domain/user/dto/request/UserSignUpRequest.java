@@ -20,7 +20,6 @@ public class UserSignUpRequest {
     private String nickname;
 
     @NotBlank(message = "이메일은 필수입니다.")
-    @Column(name = "email", nullable = false, unique = true, length = 100)
     @Pattern(regexp = "^(?=.{1,100}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "이메일 형식이 올바르지 않습니다.")
     private String email;
 
@@ -33,7 +32,7 @@ public class UserSignUpRequest {
                 .password(encodedPassword)
                 .nickname(nickname)
                 .profileImageUrl(profileImageUrl)
-                .role(Role.USER) // 회원가입시에 USER로 자동설정
+                .role(Role.USER) //등록시에 USER로 자동설정
                 .build();
     }
 

@@ -1,16 +1,14 @@
 package org.prgrms.devcourse.readcircle.domain.user.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import org.prgrms.devcourse.readcircle.domain.user.value.Role;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL) // null 필드는 무시
 public class UserUpdateRequest {
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$", message = "닉네임은 특수문자를 제외한 2~10자리여야 합니다.")
-    @Size(min = 2, max = 10, message = "닉네임은 2~10자이어야 합니다.")
     private String nickname;
-    private Role role;
-    private String profileImage;
 
+    @Pattern(regexp = "^(?=.{1,100}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "이메일 형식이 올바르지 않습니다.")
+    private String email;
 }
