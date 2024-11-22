@@ -16,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Log4j2
@@ -54,12 +56,21 @@ public class PostController {
 
     //게시글 전체 조회
     @GetMapping
-    public ResponseEntity<Page<PostDTO>> readAll(
+    public ResponseEntity<Map<String,Object>> readAll(
             @RequestParam(defaultValue = "postCreatedAt") String sortType,
             @RequestParam(defaultValue = "desc") String order
     ){
         Page<PostDTO> posts = postServiceImpl.readAll(sortType, order);
-        return ResponseEntity.ok(posts);
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("content", posts.getContent());
+        response.put("pagination", Map.of(
+                "totalElements", posts.getTotalElements(),
+                "totalPages", posts.getTotalPages(),
+                "currentPage", posts.getNumber(),
+                "pageSize", posts.getSize()
+        ));
+        return ResponseEntity.ok(response);
     }
 
     //게시글 사용자 닉네임으로 조회
