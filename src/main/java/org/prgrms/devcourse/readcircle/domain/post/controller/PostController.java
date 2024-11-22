@@ -5,6 +5,8 @@ import lombok.extern.log4j.Log4j2;
 import org.prgrms.devcourse.readcircle.domain.post.dto.PostDTO;
 import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.domain.post.service.PostServiceImpl;
+import org.prgrms.devcourse.readcircle.domain.user.entity.User;
+import org.prgrms.devcourse.readcircle.domain.user.repository.UserFindRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import java.util.List;
 @RequestMapping("/api/posts")
 public class PostController {
     private final PostServiceImpl postServiceImpl;
+    private final UserFindRepository userFindRepository;
 
     @Value("${post.image.upload.path}")
     private String uploadPath;
@@ -59,14 +62,15 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    //게시글 사용자 아이디로 조회
-    @GetMapping("/search/{userId}")
+    //게시글 사용자 닉네임으로 조회
+    @GetMapping("/search/{nickname}")
     public ResponseEntity<Page<PostDTO>> readByUserId(
-            @PathVariable("userId") String userId,
+            @PathVariable("nickname") String nickname,
             @RequestParam(defaultValue = "postCreatedAt") String sortType,
             @RequestParam(defaultValue = "desc") String order
     ){
-        Page<PostDTO> posts = postServiceImpl.readByUserId(userId, sortType, order);
+        User user = userFindRepository.findByNickname(nickname).orElse(null);
+        Page<PostDTO> posts = postServiceImpl.readByUserId(user.getUserId(), sortType, order);
         return ResponseEntity.ok(posts);
     }
 
