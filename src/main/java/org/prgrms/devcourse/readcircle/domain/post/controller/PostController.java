@@ -3,7 +3,7 @@ package org.prgrms.devcourse.readcircle.domain.post.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.prgrms.devcourse.readcircle.domain.post.dto.PostDTO;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
+import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.domain.post.service.PostServiceImpl;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
 import org.prgrms.devcourse.readcircle.domain.user.repository.UserFindRepository;
@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController

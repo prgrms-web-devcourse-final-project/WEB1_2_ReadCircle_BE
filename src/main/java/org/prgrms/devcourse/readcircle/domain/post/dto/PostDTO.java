@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.prgrms.devcourse.readcircle.domain.post.entity.Post;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCondition;
+import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
+import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
 import org.prgrms.devcourse.readcircle.domain.post.entity.enums.TradeType;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
 

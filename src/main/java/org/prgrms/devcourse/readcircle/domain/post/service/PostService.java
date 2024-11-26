@@ -1,11 +1,8 @@
 package org.prgrms.devcourse.readcircle.domain.post.service;
 
 import org.prgrms.devcourse.readcircle.domain.post.dto.PostDTO;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
+import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface PostService {
     PostDTO register(PostDTO postDTO);              //게시글 작성

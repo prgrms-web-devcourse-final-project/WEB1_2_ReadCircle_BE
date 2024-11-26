@@ -2,8 +2,8 @@ package org.prgrms.devcourse.readcircle.domain.post.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCondition;
+import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
+import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
 import org.prgrms.devcourse.readcircle.domain.post.entity.enums.TradeType;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
 import org.springframework.data.annotation.CreatedDate;

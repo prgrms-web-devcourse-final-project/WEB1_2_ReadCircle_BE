@@ -5,21 +5,16 @@ import lombok.extern.log4j.Log4j2;
 import org.prgrms.devcourse.readcircle.common.util.PagingUtil;
 import org.prgrms.devcourse.readcircle.domain.post.dto.PostDTO;
 import org.prgrms.devcourse.readcircle.domain.post.entity.Post;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
+import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.domain.post.exception.PostException;
 import org.prgrms.devcourse.readcircle.domain.post.repository.PostRepository;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
 import org.prgrms.devcourse.readcircle.domain.user.exception.UserException;
 import org.prgrms.devcourse.readcircle.domain.user.repository.UserFindRepository;
-import org.prgrms.devcourse.readcircle.domain.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +29,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public PostDTO register(PostDTO postDTO) {
         try{
-            User user = userFindRepository.findByUserId(postDTO.getUserId()).orElseThrow(UserException.NOT_FOUND::get);
+            User user = userFindRepository.findByUserId(postDTO.getUserId()).orElseThrow(PostException.NOT_FOUND_USER::getTaskException);
             Post savedPost = postDTO.toEntity();
             savedPost.setUser(user);
             postRepository.save(savedPost);
