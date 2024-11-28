@@ -1,11 +1,11 @@
 package org.prgrms.devcourse.readcircle.domain.user.dto.request;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
-import org.prgrms.devcourse.readcircle.domain.user.value.Role;
+import org.prgrms.devcourse.readcircle.domain.user.entity.enums.Role;
+
 
 @Getter
 public class UserSignUpRequest {
@@ -23,7 +23,11 @@ public class UserSignUpRequest {
     @Pattern(regexp = "^(?=.{1,100}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "이메일 형식이 올바르지 않습니다.")
     private String email;
 
+    private String address;
+
     private String profileImageUrl;
+
+
 
     public User toEntity(String encodedPassword, String profileImageUrl) {
         return User.builder()
@@ -31,8 +35,9 @@ public class UserSignUpRequest {
                 .email(email)
                 .password(encodedPassword)
                 .nickname(nickname)
-                .profileImageUrl(profileImageUrl)
+                .address(address)
                 .role(Role.USER) //등록시에 USER로 자동설정
+                .profileImageUrl(profileImageUrl)
                 .build();
     }
 

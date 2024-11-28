@@ -58,12 +58,13 @@ public class UserService {
 
         if(request.getNickname() != null) { foundUser.changeNickname(request.getNickname()); }
         if(request.getEmail() != null) { foundUser.changeEmail(request.getEmail()); }
+        if(request.getAddress() != null) { foundUser.changeAddress(request.getAddress()); }
     }
 
     public UserDTO findByUserId(String userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(UserException.NOT_FOUND::get);
-        return new UserDTO(user, uploadPath);
+        return new UserDTO(user);
     }
 
     @Transactional  // 비밀번호 변경
@@ -130,6 +131,7 @@ public class UserService {
         if(request.getRole() != null) { foundUser.changeRole(request.getRole()); }
         if(request.getPassword() != null) { foundUser.changePassword(request.getPassword(), passwordEncoder); }
         if(request.getNickname() != null) { foundUser.changeNickname(request.getNickname()); }
+        if(request.getAddress() != null) { foundUser.changeAddress(request.getAddress()); }
     }
 
 

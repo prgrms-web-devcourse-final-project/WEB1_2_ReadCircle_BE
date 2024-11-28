@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("/me")  // 내 정보 조회
-    public ResponseEntity<ApiResponse<UserDTO>> getCurrentUser(Authentication authentication) {
+    public ResponseEntity<ApiResponse> getCurrentUser(Authentication authentication) {
         String userId = authentication.getName(); // 인증된 사용자 ID 가져오기
         UserDTO userDTO = userService.findByUserId(userId); // 사용자 정보 조회
         return ResponseEntity.ok(ApiResponse.success(userDTO)); // 사용자 정보를 포함한 ApiResponse 반환
@@ -46,7 +46,6 @@ public class UserController {
         UserInfoResponse userInfo = userService.getUserInfo(userId);
         return ResponseEntity.ok(ApiResponse.success(userInfo));
     }
-
 
     @PatchMapping("/me")   // 내 정보 수정
     public ResponseEntity<ApiResponse> updateCurrentUser(@RequestBody @Valid UserUpdateRequest request,

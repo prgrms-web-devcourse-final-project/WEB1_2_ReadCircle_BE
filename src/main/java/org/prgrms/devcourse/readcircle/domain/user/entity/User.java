@@ -1,20 +1,24 @@
 package org.prgrms.devcourse.readcircle.domain.user.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.BaseTimeEntity;
-import org.prgrms.devcourse.readcircle.domain.user.value.Role;
+import org.prgrms.devcourse.readcircle.common.value.Address;
+
+import org.prgrms.devcourse.readcircle.domain.user.entity.enums.Role;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_no", nullable = false)
     private Long id;
 
     @Column(name = "userId", unique = true)
@@ -33,14 +37,18 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Embedded
+    public Address address;
+
     private String profileImageUrl;
 
     @Builder
-    public User(final String userId, final String password, final String email, final String nickname, final Role role, final String profileImageUrl) {
+    public User(final String userId, final String password, final String email, final String nickname, final String address, final Role role, final String profileImageUrl) {
         this.userId = userId;
         this.password = password;
         this.email = email;
         this.nickname = nickname;
+        this.address = new Address(address);
         this.role = role;
         this.profileImageUrl = profileImageUrl;
     }
@@ -64,5 +72,9 @@ public class User extends BaseTimeEntity {
 
     public void changeEmail(String email) {
         this.email = email;
+    }
+
+    public void changeAddress(String address) {
+        this.address = new Address(address);
     }
 }
