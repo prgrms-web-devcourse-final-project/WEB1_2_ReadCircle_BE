@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Repository
-public class LocalImageRpository implements ImageRepository {
+public class LocalImageRepository implements ImageRepository {
 
     @Value("${file.local.upload.path}")
     private String uploadPath;

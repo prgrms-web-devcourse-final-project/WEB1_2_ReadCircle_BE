@@ -9,12 +9,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.prgrms.devcourse.readcircle.domain.auth.principal.CustomUserDetails;
 import org.prgrms.devcourse.readcircle.domain.auth.util.JWTUtil;
-import org.prgrms.devcourse.readcircle.domain.user.value.Role;
+import org.prgrms.devcourse.readcircle.domain.user.entity.enums.Role;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 public class JwtCheckFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
 
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         log.info("--- shouldNotFilter()");
@@ -38,12 +41,17 @@ public class JwtCheckFilter extends OncePerRequestFilter {
         // 제외할 경로 리스트
         Set<String> excludedPaths = Set.of(
                 "/api/auth/login",
-                "/api/users/signup"
+                "/api/users/signup",
+                "/api/posts",
+                "/api/books",
+                "/local_image_storage/**",
+                "/post_image_storage/**",
+                "/api/books/detail/{bookId}"
         );
 
-        // 요청 URI가 제외할 경로에 포함되면 필터링을 적용하지 않음
+        // 요청 URI가 제외할 경로 패턴에 매칭되면 필터링을 적용하지 않음
         for (String path : excludedPaths) {
-            if (request.getRequestURI().startsWith(path)) {
+            if (pathMatcher.match(path, request.getRequestURI())) {
                 return true;
             }
         }
@@ -56,17 +64,18 @@ public class JwtCheckFilter extends OncePerRequestFilter {
         log.info("--- doFilterInternal() ");
         log.info("--- requestURI : " + request.getRequestURI());
 
-//      -----쿠키에 토큰값을 저장하였으므로 쿠키에서 토큰값을 가져와야한다.-----
-        String accessToken = getTokenFromCookies(request, "accessToken");
-        log.info("--- Access Token: {}", accessToken);
+        // Authorization 헤더에서 액세스 토큰 읽기
+        String headerAuth = request.getHeader("Authorization");
+        log.info("--- headerAuth : " + headerAuth);
 
-//         액세스 토큰이 없으면 403 예외 발생
-        if (accessToken == null) {
+        //액세스 토큰이 없거나 'Bearer ' 가 아니면 403 예외 발생
+        if (headerAuth == null || !headerAuth.startsWith("Bearer ")) {   //Bearer 옆에 공백 필수 !
             handleException(response, new Exception("ACCESS TOKEN NOT FOUND"));
             return;
         }
 
         // 토큰 유효성 검증 --------------------------------------
+        String accessToken = headerAuth.substring(7);  //"Bearer " 를 제외하고 토큰값 저장
         try{
             Map<String, Object> claims = jwtUtil.validateToken(accessToken);
             log.info("--- 토큰 유효성 검증 완료 ---");
@@ -94,16 +103,6 @@ public class JwtCheckFilter extends OncePerRequestFilter {
         }catch (Exception e) {
             handleException(response, e);
         }
-
-    }
-
-    private String getTokenFromCookies(HttpServletRequest request, String tokenName) {
-        if (request.getCookies() == null) return null;
-        return Arrays.stream(request.getCookies())
-                .filter(cookie -> tokenName.equals(cookie.getName()))
-                .map(Cookie::getValue)
-                .findFirst()
-                .orElse(null);
     }
 
     private void setAuthentication(String userId, List<GrantedAuthority> grantedAuthorities) {

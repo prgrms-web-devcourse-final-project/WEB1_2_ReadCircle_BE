@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.prgrms.devcourse.readcircle.domain.auth.filter.JwtCheckFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,6 +22,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     private final JwtCheckFilter jwtCheckFilter;
 
@@ -31,17 +31,14 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorize -> authorize
-                    .requestMatchers("/api/auth/login", "/api/users/signup").permitAll()
-                        .anyRequest().authenticated()
+                    .requestMatchers("/api/auth/login", "/api/users/signup", "/api/posts", "/api/books/detail/{bookId}","/api/books", "/local_image_storage/**","/post_image_storage").permitAll()
+                .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> {
                     cors.configurationSource(corsConfigurationSource());
                 });
-
-
         return http.build();
-
     }
 
     // CORS 설정 관련 메서드
@@ -61,15 +58,15 @@ public class SecurityConfig {
         // 자격 증명 허용 여부
         corsConfig.setAllowCredentials(true);
 
+        // CORS 요청 시 Content-Type 허용
+        corsConfig.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+
         // URL 패턴 기반으로 CORS 구성
         UrlBasedCorsConfigurationSource corsSource = new UrlBasedCorsConfigurationSource();
         corsSource.registerCorsConfiguration("/**", corsConfig); // 모든 경로 적용
 
         return corsSource;
     }
-
-
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

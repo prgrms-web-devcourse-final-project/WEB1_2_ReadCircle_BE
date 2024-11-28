@@ -1,4 +1,4 @@
-package org.prgrms.devcourse.readcircle.domain.user.value;
+package org.prgrms.devcourse.readcircle.domain.user.entity.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 

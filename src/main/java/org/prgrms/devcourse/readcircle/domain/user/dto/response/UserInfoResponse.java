@@ -13,10 +13,10 @@ public class UserInfoResponse {
     private final String nickname;
     private final String profileImageUrl;
 
-    public UserInfoResponse(User user, String uploadPath) {
+    public UserInfoResponse(final User user, final String uploadPath) {
         this.userId = user.getUserId();
         this.email = user.getEmail();
         this.nickname = user.getNickname();
-        this.profileImageUrl = uploadPath + "/" + user.getProfileImageUrl();  // 경로 + 파일명
+        this.profileImageUrl = "/local_image_storage/" +user.getProfileImageUrl();  // 경로 + 파일명
     }
 }

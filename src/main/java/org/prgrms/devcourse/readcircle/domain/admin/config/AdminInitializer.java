@@ -2,8 +2,8 @@ package org.prgrms.devcourse.readcircle.domain.admin.config;
 
 import lombok.extern.log4j.Log4j2;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
+import org.prgrms.devcourse.readcircle.domain.user.entity.enums.Role;
 import org.prgrms.devcourse.readcircle.domain.user.repository.UserRepository;
-import org.prgrms.devcourse.readcircle.domain.user.value.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,9 +41,9 @@ public class AdminInitializer implements CommandLineRunner {
                     .userId(adminUserId)
                     .password(passwordEncoder.encode(adminPassword))
                     .email(adminEmail)
-                    .nickname("Admin")
+                    .nickname("root_admin")
                     .role(Role.ADMIN)
-                    .profileImageUrl(uploadPath + "/defaultImage.png")
+                    .profileImageUrl("defaultImage.png")
                     .build();
             userRepository.save(admin);
             log.info("환경변수를 통해 초기 관리자 계정 생성 완료");

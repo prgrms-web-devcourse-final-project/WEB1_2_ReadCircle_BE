@@ -3,7 +3,7 @@ package org.prgrms.devcourse.readcircle.domain.user.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
-import org.prgrms.devcourse.readcircle.domain.user.value.Role;
+import org.prgrms.devcourse.readcircle.domain.user.entity.enums.Role;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,17 +24,10 @@ public class UserDTO {
         this.email = user.getEmail();
         this.role = user.getRole();
         this.nickname = user.getNickname();
-        this.profileImageUrl = user.getProfileImageUrl();
+        this.profileImageUrl = "/local_image_storage/" +user.getProfileImageUrl();
     }
 
-    public UserDTO(User user, String uploadPath) {
-        this.userId = user.getUserId();
-        this.password = user.getPassword();
-        this.email = user.getEmail();
-        this.role = user.getRole();
-        this.nickname = user.getNickname();
-        this.profileImageUrl = uploadPath+ "/" + user.getProfileImageUrl();
-    }
+
 
     @JsonIgnore
     public Map<String, Object> getPayload() {
