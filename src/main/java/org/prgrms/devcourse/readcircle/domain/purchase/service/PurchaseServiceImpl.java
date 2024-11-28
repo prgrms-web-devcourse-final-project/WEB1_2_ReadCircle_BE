@@ -2,6 +2,9 @@ package org.prgrms.devcourse.readcircle.domain.purchase.service;
 
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.util.PagingUtil;
+import org.prgrms.devcourse.readcircle.domain.notification.entity.Notification;
+import org.prgrms.devcourse.readcircle.domain.notification.service.NotificationService;
+import org.prgrms.devcourse.readcircle.domain.notification.service.SSEService;
 import org.prgrms.devcourse.readcircle.domain.purchase.dto.PricingDTO;
 import org.prgrms.devcourse.readcircle.domain.purchase.dto.PurchaseDTO;
 import org.prgrms.devcourse.readcircle.domain.purchase.entity.Purchase;
@@ -9,13 +12,15 @@ import org.prgrms.devcourse.readcircle.domain.purchase.entity.enums.PurchaseStat
 import org.prgrms.devcourse.readcircle.domain.purchase.exception.PurchaseException;
 import org.prgrms.devcourse.readcircle.domain.purchase.repository.PurchaseRepository;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
-import org.prgrms.devcourse.readcircle.domain.user.repository.UserFindRepository;
+import org.prgrms.devcourse.readcircle.domain.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.prgrms.devcourse.readcircle.domain.purchase.entity.enums.PurchaseStatus.REQUEST_WAITING;
+import static org.prgrms.devcourse.readcircle.domain.notification.entity.NotificationType.PURCHASE_PRICE_SET;
+import static org.prgrms.devcourse.readcircle.domain.notification.entity.NotificationType.PURCHASE_RESPONSE_WAITING;
+import static org.prgrms.devcourse.readcircle.domain.purchase.entity.enums.PurchaseStatus.RESPONSE_WAITING;
 
 
 @Service
@@ -23,18 +28,31 @@ import static org.prgrms.devcourse.readcircle.domain.purchase.entity.enums.Purch
 @RequiredArgsConstructor
 public class PurchaseServiceImpl implements PurchaseService{
     private final PurchaseRepository purchaseRepository;
-    private final UserFindRepository userFindRepository;
+    private final NotificationService notificationService;
+    private final UserService userService;
+    private final SSEService sseService;
     private final PagingUtil pagingUtil;
 
     @Override
     public PurchaseDTO register(PurchaseDTO purchaseDTO) {
         try{
-            User user = userFindRepository.findByUserId(purchaseDTO.getUserId())
-                                            .orElseThrow(PurchaseException.NOT_FOUND_USER_EXCEPTION::getTaskException);
+            User user = userService.findUserByUserId(purchaseDTO.getUserId());
+
             Purchase purchase = purchaseDTO.toEntity();
             purchase.setUser(user);
-            purchase.changePurchaseStatus(REQUEST_WAITING);
+            purchase.changePurchaseStatus(RESPONSE_WAITING);
             purchaseRepository.save(purchase);
+
+            if(purchase!=null){
+                String message = "새로운 매입 신청이 있습니다.";
+                Notification notification = notificationService.saveNotification(
+                        "admin",
+                        message,
+                        PURCHASE_RESPONSE_WAITING
+                );
+                sseService.sendNotification("admin", message, PURCHASE_RESPONSE_WAITING, notification.getNotificationId());
+            }
+
             return new PurchaseDTO(purchase);
         }catch (Exception e){
             throw PurchaseException.NOT_REGISTERED_EXCEPTION.getTaskException();
@@ -64,14 +82,27 @@ public class PurchaseServiceImpl implements PurchaseService{
     @Override
     public PurchaseDTO pricing(Long purchaseId, PricingDTO pricingDTO) {
         Purchase purchase = purchaseRepository.findById(purchaseId).orElseThrow(PurchaseException.NOT_FOUND_EXCEPTION::getTaskException);
+        String userId = purchase.getUser().getUserId();
+        String isbn = purchase.getIsbn();
+
         try{
             purchase.changePrice(pricingDTO.getPrice());
             purchase.changePurchaseStatus(pricingDTO.getPurchaseStatus());
             purchase.changeBookCondition(pricingDTO.getBookCondition());
 
             purchaseRepository.save(purchase);
-            return new PurchaseDTO(purchase);
+            if(pricingDTO.getPurchaseStatus()==PurchaseStatus.PRICE_SET){
+                String message = "판매자님!  isbn 번호 - "+ isbn +" 의 가격이 결정되었습니다. 판매 목록에서 확인하실 수 있습니다.";
+                Notification notification = notificationService.saveNotification(
+                        userId,
+                        message,
+                        PURCHASE_PRICE_SET
+                );
 
+                sseService.sendNotification(userId, message, notification.getType(), notification.getNotificationId());
+            }
+
+            return new PurchaseDTO(purchase);
         }catch (Exception e){
             throw PurchaseException.NOT_MODIFIED_EXCEPTION.getTaskException();
         }

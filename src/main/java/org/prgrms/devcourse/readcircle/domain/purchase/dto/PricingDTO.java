@@ -12,6 +12,8 @@ import org.prgrms.devcourse.readcircle.domain.purchase.entity.enums.PurchaseStat
 @NoArgsConstructor
 @AllArgsConstructor
 public class PricingDTO {
+    private String userId;
+    private String isbn;
     private int price;
     private BookCondition bookCondition;
     private PurchaseStatus purchaseStatus;

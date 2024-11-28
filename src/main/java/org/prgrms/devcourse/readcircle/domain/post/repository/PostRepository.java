@@ -18,7 +18,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     @Query(" SELECT p FROM Post p WHERE p.user.userId = :userId ")
     Page<PostDTO> getPostByUserId(@Param("userId") String userId, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"user"})
+    @EntityGraph(attributePaths = "user")
     @Query(" SELECT p FROM Post p WHERE p.title LIKE %:keyword% ")
     Page<PostDTO> getPostByKeyword(@Param("keyword") String keyword, Pageable pageable);
 

@@ -132,5 +132,12 @@ public class UserService {
         if(request.getNickname() != null) { foundUser.changeNickname(request.getNickname()); }
     }
 
+
+    //UserId로 찾고 User를 반환
+    public User findUserByUserId(String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(UserException.NOT_FOUND::get);
+        return user;
+    }
 }
 
