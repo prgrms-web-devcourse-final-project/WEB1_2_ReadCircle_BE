@@ -4,8 +4,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCondition;
+import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
+import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
 
 @Getter
 public class BookCreateRequest {
