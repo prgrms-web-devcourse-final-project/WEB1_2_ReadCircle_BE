@@ -27,8 +27,6 @@ public class UserDTO {
         this.profileImageUrl = "/local_image_storage/" +user.getProfileImageUrl();
     }
 
-
-
     @JsonIgnore
     public Map<String, Object> getPayload() {
         Map<String, Object> payloadMap = new HashMap<>();

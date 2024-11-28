@@ -72,8 +72,8 @@ public class UserController {
             Authentication authentication
     ) {
         String userId = authentication.getName();
-        userService.updateProfileImage(userId, image);
-        return ResponseEntity.ok(ApiResponse.success(null));
+        String imageUrl = userService.updateProfileImage(userId, image);
+        return ResponseEntity.ok(ApiResponse.success(imageUrl));
     }
 
     @DeleteMapping("/me")  // 회원 탈퇴
@@ -119,8 +119,8 @@ public class UserController {
             @PathVariable("userId") String userId,
             @RequestPart(value = "image", required = false) final MultipartFile image
     ) {
-        userService.updateProfileImage(userId, image);
-        return ResponseEntity.ok(ApiResponse.success(null));
+        String imageUrl = userService.updateProfileImage(userId, image);
+        return ResponseEntity.ok(ApiResponse.success(imageUrl));
     }
 
     @DeleteMapping("/admin/{userId}")  // 회원 삭제

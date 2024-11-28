@@ -51,8 +51,8 @@ public class Book extends BaseTimeEntity {
             final String publisher, String description,
             final String isbn, String publishDate, String thumbnailUrl,
             final BookCondition bookCondition,
-            final int price,
-            final int stock) {
+            final int price
+    ) {
         this.category = category;
         this.title = title;
         this.author = author;
@@ -91,4 +91,12 @@ public class Book extends BaseTimeEntity {
         this.isForSale = isForSale;
     }
 
+    public void changeIsForSale(final boolean isForSale) {
+        this.isForSale = isForSale;
+    }
+
+    // 주문이 완료될 때
+    public void changeIsNotForSale(boolean isForSale) {
+        this.isForSale = isForSale;
+    }
 }

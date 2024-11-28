@@ -58,7 +58,6 @@ public class UserService {
 
         if(request.getNickname() != null) { foundUser.changeNickname(request.getNickname()); }
         if(request.getEmail() != null) { foundUser.changeEmail(request.getEmail()); }
-        if(request.getAddress() != null) { foundUser.changeAddress(request.getAddress()); }
     }
 
     public UserDTO findByUserId(String userId) {
@@ -83,18 +82,23 @@ public class UserService {
     }
 
     @Transactional  // 프로필 사진 변경
-    public void updateProfileImage(String userId, MultipartFile image) {
+    public String updateProfileImage(String userId, MultipartFile image) {
         // 사용자 조회
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(UserException.NOT_FOUND::get);
 
         // 이미지가 제출되지 않았다면, 기존 이미지를 유지
-        if (image != null && !image.isEmpty()) {
-            // 파일 업로드
-            String imageUrl = imageRepository.upload(image);
-            // 이미지 URL을 사용자 프로필에 업데이트
-            user.changeProfileImageUrl(imageUrl);
+        if (image == null && image.isEmpty()) {
+            return null;
         }
+        // 파일 업로드
+        String imageUrl = imageRepository.upload(image);
+        // 이미지 URL을 사용자 프로필에 업데이트
+        user.changeProfileImageUrl(imageUrl);
+
+        return "/local_image_storage/" + imageUrl;
+
+
     }
 
     @Transactional        // 회원 탈퇴
