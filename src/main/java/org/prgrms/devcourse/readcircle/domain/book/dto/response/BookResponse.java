@@ -2,9 +2,9 @@ package org.prgrms.devcourse.readcircle.domain.book.dto.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.domain.book.entity.Book;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCondition;
+import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
 
 import java.time.LocalDateTime;
 

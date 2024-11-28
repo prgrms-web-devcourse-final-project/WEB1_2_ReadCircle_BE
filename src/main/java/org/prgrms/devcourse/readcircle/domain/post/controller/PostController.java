@@ -1,26 +1,18 @@
 package org.prgrms.devcourse.readcircle.domain.post.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.prgrms.devcourse.readcircle.common.upload.PostImageRpository;
 import org.prgrms.devcourse.readcircle.domain.post.dto.PostDTO;
 import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.domain.post.service.PostServiceImpl;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
 import org.prgrms.devcourse.readcircle.domain.user.repository.UserFindRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -37,10 +29,10 @@ public class PostController {
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostDTO> create(
             @RequestPart(name = "postDTO") String postDTOJson, // JSON 문자열로 받음
-            @RequestPart(name = "bookImage", required = false) MultipartFile bookImage) {
-
-        PostDTO postDTO = postServiceImpl.register(postDTOJson,bookImage);
-
+            @RequestPart(name = "bookImage") MultipartFile bookImage,
+            @RequestPart(name = "bookAPIImage") MultipartFile bookAPIImage
+    ) {
+        PostDTO postDTO = postServiceImpl.register(postDTOJson,bookImage, bookAPIImage);
         return ResponseEntity.ok(postDTO);
     }
 

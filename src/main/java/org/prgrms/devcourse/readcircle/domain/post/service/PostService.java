@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface PostService {
-    PostDTO register(String postDTO, MultipartFile bookImage);              //게시글 작성
+    PostDTO register(String postDTO, MultipartFile bookImage, MultipartFile bookAPIImage);              //게시글 작성
 
     PostDTO read(Long postId);                      //게시글 상세 조회
 
