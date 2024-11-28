@@ -1,7 +1,6 @@
 package org.prgrms.devcourse.readcircle.common.upload;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,10 +10,9 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Repository
-@Primary
-public class LocalImageRpository implements ImageRepository {
+public class PostImageRpository implements ImageRepository {
 
-    @Value("${file.local.upload.path}")
+    @Value("./src/main/resources/static/post_image_storage")
     private String uploadPath;
 
     @Override
