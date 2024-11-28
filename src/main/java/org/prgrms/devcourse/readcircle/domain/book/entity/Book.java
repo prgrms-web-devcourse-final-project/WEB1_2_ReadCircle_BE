@@ -7,8 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.BaseTimeEntity;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCondition;
+import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
+import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
 
 @Entity
 @Getter

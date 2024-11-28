@@ -1,4 +1,4 @@
-package org.prgrms.devcourse.readcircle.domain.post.entity.enums;
+package org.prgrms.devcourse.readcircle.common.enums;
 
 public enum BookCategory {
     소설,

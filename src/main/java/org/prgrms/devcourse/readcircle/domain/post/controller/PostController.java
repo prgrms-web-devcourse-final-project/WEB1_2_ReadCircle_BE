@@ -3,21 +3,17 @@ package org.prgrms.devcourse.readcircle.domain.post.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.prgrms.devcourse.readcircle.domain.post.dto.PostDTO;
-import org.prgrms.devcourse.readcircle.domain.post.entity.enums.BookCategory;
+import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.domain.post.service.PostServiceImpl;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
 import org.prgrms.devcourse.readcircle.domain.user.repository.UserFindRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,25 +24,18 @@ public class PostController {
     private final PostServiceImpl postServiceImpl;
     private final UserFindRepository userFindRepository;
 
-    @Value("${post.image.upload.path}")
-    private String uploadPath;
 
     //게시글 등록
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PostDTO> create(
-            @RequestPart(name = "postDTO") PostDTO postDTO,
-            @RequestPart(name = "bookImage", required = false) MultipartFile bookImage
-        ) throws IOException {
-
-
-        if(bookImage != null && !bookImage.isEmpty()){
-            String fileName = System.currentTimeMillis() + "_" + bookImage.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
-            Path filePath = Paths.get(uploadPath, fileName);
-            bookImage.transferTo(filePath.toFile());
-            postDTO.setBookImage(filePath.toString());
-        }
-        return ResponseEntity.ok(postServiceImpl.register(postDTO));
+            @RequestPart(name = "postDTO") String postDTOJson, // JSON 문자열로 받음
+            @RequestPart(name = "bookImage") MultipartFile bookImage,
+            @RequestPart(name = "bookAPIImage") MultipartFile bookAPIImage
+    ) {
+        PostDTO postDTO = postServiceImpl.register(postDTOJson,bookImage, bookAPIImage);
+        return ResponseEntity.ok(postDTO);
     }
+
 
     //게시글 상세 조회
     @GetMapping("/{postId}")
