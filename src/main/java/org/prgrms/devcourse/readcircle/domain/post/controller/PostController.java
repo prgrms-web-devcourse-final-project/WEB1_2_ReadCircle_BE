@@ -47,7 +47,7 @@ public class PostController {
     //게시글 전체 조회
     @GetMapping
     public ResponseEntity<Map<String,Object>> readAll(
-            @RequestParam(defaultValue = "postCreatedAt") String sortType,
+            @RequestParam(defaultValue = "createdAt") String sortType,
             @RequestParam(defaultValue = "desc") String order
     ){
         Page<PostDTO> posts = postServiceImpl.readAll(sortType, order);
@@ -66,7 +66,7 @@ public class PostController {
     //게시글 사용자 닉네임으로 조회
     @GetMapping("/search/my-posts")
     public ResponseEntity<Page<PostDTO>> readByUserId(
-            @RequestParam(defaultValue = "postCreatedAt") String sortType,
+            @RequestParam(defaultValue = "createdAt") String sortType,
             @RequestParam(defaultValue = "desc") String order,
             Authentication authentication
     ){
@@ -79,7 +79,7 @@ public class PostController {
     @GetMapping("/search/keyword/{title}")
     public ResponseEntity<Page<PostDTO>> readByKeyword(
             @PathVariable("title") String title,
-            @RequestParam(defaultValue = "postCreatedAt") String sortType,
+            @RequestParam(defaultValue = "createdAt") String sortType,
             @RequestParam(defaultValue = "desc") String order
     ){
         Page<PostDTO> posts = postServiceImpl.readByKeyword(title, sortType, order);
@@ -90,7 +90,7 @@ public class PostController {
     @GetMapping("/search/category/{category}")
     public ResponseEntity<Page<PostDTO>> readByCategory(
             @PathVariable("category") BookCategory bookCategory,
-            @RequestParam(defaultValue = "postCreatedAt") String sortType,
+            @RequestParam(defaultValue = "createdAt") String sortType,
             @RequestParam(defaultValue = "desc") String order
         ){
         Page<PostDTO> posts = postServiceImpl.readByCategory(bookCategory, sortType, order);

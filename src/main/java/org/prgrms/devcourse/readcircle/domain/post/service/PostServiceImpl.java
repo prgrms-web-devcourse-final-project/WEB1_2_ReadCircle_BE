@@ -32,7 +32,6 @@ public class PostServiceImpl implements PostService{
     //게시글 등록
     @Override
     public PostDTO register(String postDTOJson, MultipartFile bookImage, MultipartFile bookAPIImage) {
-        System.out.println("Received JSON: " + postDTOJson);
         ObjectMapper objectMapper = new ObjectMapper();
         PostDTO postDTO=null;
 
