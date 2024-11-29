@@ -27,14 +27,16 @@ public class PostController {
 
 
     //게시글 등록
-    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/create")
     public ResponseEntity<PostDTO> create(
-            @RequestPart(name = "postDTO") String postDTOJson, // JSON 문자열로 받음
+            @RequestPart(name = "postDTO") PostDTO postDTO,
             @RequestPart(name = "bookImage") MultipartFile bookImage,
-            @RequestPart(name = "bookAPIImage") MultipartFile bookAPIImage
+            @RequestPart(name = "bookAPIImage") MultipartFile bookAPIImage,
+            Authentication authentication
     ) {
-        PostDTO postDTO = postServiceImpl.register(postDTOJson,bookImage, bookAPIImage);
-        return ResponseEntity.ok(postDTO);
+        String userId = authentication.getName();
+        PostDTO savedPostDTO = postServiceImpl.register(postDTO, bookImage, bookAPIImage, userId);
+        return ResponseEntity.ok(savedPostDTO);
     }
 
 

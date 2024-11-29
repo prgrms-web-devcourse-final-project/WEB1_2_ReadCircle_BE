@@ -25,9 +25,9 @@ public class CommentServiceImpl implements CommentService {
 
     //댓글 생성
     @Override
-    public CommentDTO register(CommentDTO commentDTO){
+    public CommentDTO register(CommentDTO commentDTO, String userId){
         try{
-            User user = userFindRepository.findByUserId(commentDTO.getUserId()).orElseThrow(UserException.NOT_FOUND::get);
+            User user = userFindRepository.findByUserId(userId).orElseThrow(UserException.NOT_FOUND::get);
             Comment comment = commentDTO.toEntity();
             comment.setUser(user);
             commentRepository.save(comment);

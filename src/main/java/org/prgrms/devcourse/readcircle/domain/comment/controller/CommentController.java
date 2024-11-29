@@ -20,10 +20,12 @@ public class CommentController {
     @PostMapping("/{postId}")
     public ResponseEntity<CommentDTO> register(
             @RequestBody CommentDTO commentDTO,
-            @PathVariable("postId") Long postId
+            @PathVariable("postId") Long postId,
+            Authentication authentication
     ){
         commentDTO.setPostId(postId);
-        return ResponseEntity.ok(commentService.register(commentDTO));
+        String userId = authentication.getName();
+        return ResponseEntity.ok(commentService.register(commentDTO, userId));
     }
 
     @GetMapping("/{postId}")
