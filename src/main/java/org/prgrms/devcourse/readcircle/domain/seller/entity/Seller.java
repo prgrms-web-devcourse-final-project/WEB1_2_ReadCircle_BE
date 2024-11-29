@@ -2,10 +2,8 @@ package org.prgrms.devcourse.readcircle.domain.seller.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.prgrms.devcourse.readcircle.common.BaseTimeEntity;
-import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
 import org.prgrms.devcourse.readcircle.domain.book.entity.Book;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
