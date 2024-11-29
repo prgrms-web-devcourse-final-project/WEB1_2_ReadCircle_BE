@@ -2,7 +2,6 @@ package org.prgrms.devcourse.readcircle.domain.seller.dto.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
 import org.prgrms.devcourse.readcircle.domain.seller.entity.Seller;
 
 @Getter
