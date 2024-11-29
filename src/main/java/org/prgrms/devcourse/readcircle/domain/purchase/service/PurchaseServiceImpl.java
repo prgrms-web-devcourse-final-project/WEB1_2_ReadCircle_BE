@@ -2,9 +2,9 @@ package org.prgrms.devcourse.readcircle.domain.purchase.service;
 
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.util.PagingUtil;
-import org.prgrms.devcourse.readcircle.domain.notification.entity.Notification;
-import org.prgrms.devcourse.readcircle.domain.notification.service.NotificationService;
-import org.prgrms.devcourse.readcircle.domain.notification.service.SSEService;
+import org.prgrms.devcourse.readcircle.common.notification.entity.Notification;
+import org.prgrms.devcourse.readcircle.common.notification.service.NotificationService;
+import org.prgrms.devcourse.readcircle.common.notification.service.SSEService;
 import org.prgrms.devcourse.readcircle.domain.purchase.dto.PricingDTO;
 import org.prgrms.devcourse.readcircle.domain.purchase.dto.PurchaseDTO;
 import org.prgrms.devcourse.readcircle.domain.purchase.entity.Purchase;
@@ -18,8 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.prgrms.devcourse.readcircle.domain.notification.entity.NotificationType.PURCHASE_PRICE_SET;
-import static org.prgrms.devcourse.readcircle.domain.notification.entity.NotificationType.PURCHASE_RESPONSE_WAITING;
+import static org.prgrms.devcourse.readcircle.common.notification.entity.NotificationType.PURCHASE_PRICE_SET;
+import static org.prgrms.devcourse.readcircle.common.notification.entity.NotificationType.PURCHASE_RESPONSE_WAITING;
 import static org.prgrms.devcourse.readcircle.domain.purchase.entity.enums.PurchaseStatus.RESPONSE_WAITING;
 
 

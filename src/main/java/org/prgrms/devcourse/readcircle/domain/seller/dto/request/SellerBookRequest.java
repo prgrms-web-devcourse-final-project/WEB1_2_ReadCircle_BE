@@ -1,18 +1,27 @@
-package org.prgrms.devcourse.readcircle.domain.book.dto.request;
-
+package org.prgrms.devcourse.readcircle.domain.seller.dto.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
 import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
 
 @Getter
-public class BookUpdateRequest {
+@Builder
+public class SellerBookRequest {
+
+    @NotBlank(message = "은행 이름 입력은 필수입니다.")
+    private String bank;
+
+    @NotBlank(message = "계좌번호 입력은 필수입니다.")
+    private String account;
+
+    @NotBlank(message = "계좌 소유자 이름 입력은 필수입니다.")
+    private String accountOwner;
+
 
     @NotBlank(message = "책 제목은 필수입니다.")
     private String title;
@@ -39,32 +48,10 @@ public class BookUpdateRequest {
     private BookCondition bookCondition;
 
     @NotNull(message = "책 카테고리는 필수입니다.")
-    private BookCategory category;
+    private BookCategory bookCategory;
 
     @Min(value = 0, message = "가격은 0 이상이어야 합니다.")
     private int price;
 
-    private boolean isForSale;
-
     private BookProcess process;
-
-    public BookUpdateRequest(int price, BookProcess process, BookCondition condition){
-        this.price = price;
-        this.process = process;
-        this.bookCondition = condition;
-    }
-    public BookUpdateRequest(String title, BookCategory bookCategory, String isbn, String author, String publisher, String publishDate, String description, String thumbnailUrl, BookCondition bookCondition, int price, BookProcess process, boolean isForSale) {
-        this.title = title;
-        this.category = bookCategory;
-        this.isbn = isbn;
-        this.author = author;
-        this.publisher = publisher;
-        this.publishDate = publishDate;
-        this.description = description;
-        this.thumbnailUrl = thumbnailUrl;
-        this.bookCondition = bookCondition;
-        this.price = price;
-        this.process = process;
-        this.isForSale = isForSale;
-    }
 }

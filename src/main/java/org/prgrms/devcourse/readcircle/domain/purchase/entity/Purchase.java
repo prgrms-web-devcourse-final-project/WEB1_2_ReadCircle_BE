@@ -2,6 +2,7 @@ package org.prgrms.devcourse.readcircle.domain.purchase.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.prgrms.devcourse.readcircle.common.BaseTimeEntity;
 import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
 import org.prgrms.devcourse.readcircle.domain.purchase.entity.enums.PurchaseStatus;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
@@ -20,8 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EntityListeners(AuditingEntityListener.class)
-public class Purchase {
+public class Purchase extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long purchaseId;

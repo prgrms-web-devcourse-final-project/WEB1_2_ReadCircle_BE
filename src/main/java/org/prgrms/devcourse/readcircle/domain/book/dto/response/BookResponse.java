@@ -3,6 +3,8 @@ package org.prgrms.devcourse.readcircle.domain.book.dto.response;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
+import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
+import org.prgrms.devcourse.readcircle.domain.book.dto.request.BookUpdateRequest;
 import org.prgrms.devcourse.readcircle.domain.book.entity.Book;
 import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
 
@@ -21,6 +23,7 @@ public class BookResponse {
     private final String publishDate;
     private final String thumbnailUrl;
     private final BookCondition bookCondition;
+    private final BookProcess process;
     private final int price;
     private final boolean isForSale;
     private final LocalDateTime createdAt;
@@ -38,6 +41,7 @@ public class BookResponse {
                 book.getPublishDate(),
                 book.getThumbnailUrl(),
                 book.getBookCondition(),
+                book.getProcess(),
                 book.getPrice(),
                 book.isForSale(),
                 book.getCreatedAt(),
