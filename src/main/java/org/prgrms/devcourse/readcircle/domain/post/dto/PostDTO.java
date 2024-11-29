@@ -52,8 +52,8 @@ public class PostDTO {
     @Builder.Default
     private boolean tradeStatus = false;
 
-    private LocalDateTime postCreatedAt;
-    private LocalDateTime postUpdatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @NotNull
     private String userId;
@@ -77,8 +77,6 @@ public class PostDTO {
                 .publisher(publisher)
                 .publishDate(publishDate)
                 .tradeStatus(tradeStatus)
-                .postCreatedAt(postCreatedAt)
-                .postUpdatedAt(postUpdatedAt)
                 .user(user)
                 .build();
     }
@@ -98,8 +96,8 @@ public class PostDTO {
         this.publisher = post.getPublisher();
         this.publishDate = post.getPublishDate();
         this.tradeStatus = post.isTradeStatus();
-        this.postCreatedAt = post.getPostCreatedAt();
-        this.postUpdatedAt = post.getPostUpdatedAt();
+        this.createdAt = post.getCreatedAt();
+        this.updatedAt = post.getUpdatedAt();
         this.userId = post.getUser().getUserId();
         this.nickname = post.getUser().getNickname();
     }

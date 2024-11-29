@@ -3,6 +3,7 @@ package org.prgrms.devcourse.readcircle.domain.post.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import org.prgrms.devcourse.readcircle.common.BaseTimeEntity;
 import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
 import org.prgrms.devcourse.readcircle.domain.post.entity.enums.TradeType;
@@ -20,8 +21,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EntityListeners(AuditingEntityListener.class)
-public class Post {
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
@@ -47,12 +47,6 @@ public class Post {
 
     @Enumerated(EnumType.STRING)
     private TradeType tradeType;
-
-    @CreatedDate
-    private LocalDateTime postCreatedAt;
-
-    @LastModifiedDate
-    private LocalDateTime postUpdatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)

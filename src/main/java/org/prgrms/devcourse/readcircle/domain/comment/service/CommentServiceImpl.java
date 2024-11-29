@@ -25,9 +25,9 @@ public class CommentServiceImpl implements CommentService {
 
     //댓글 생성
     @Override
-    public CommentDTO register(CommentDTO commentDTO){
+    public CommentDTO register(CommentDTO commentDTO, String userId){
         try{
-            User user = userFindRepository.findByUserId(commentDTO.getUserId()).orElseThrow(UserException.NOT_FOUND::get);
+            User user = userFindRepository.findByUserId(userId).orElseThrow(UserException.NOT_FOUND::get);
             Comment comment = commentDTO.toEntity();
             comment.setUser(user);
             commentRepository.save(comment);
@@ -46,8 +46,8 @@ public class CommentServiceImpl implements CommentService {
 
     //유저 닉네임으로 댓글 조회 (마이페이지)
     @Override
-    public List<CommentDTO> readAllByNickname(String nickname){
-        List<Comment> commentList = commentRepository.findAllByNickname(nickname);
+    public List<CommentDTO> readAllByUserId(String userId){
+        List<Comment> commentList = commentRepository.findAllByUserId(userId);
         return commentList.stream().map(CommentDTO::new).toList();
     }
 

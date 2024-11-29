@@ -10,6 +10,7 @@ import org.prgrms.devcourse.readcircle.domain.user.repository.UserFindRepository
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,14 +27,16 @@ public class PostController {
 
 
     //게시글 등록
-    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/create")
     public ResponseEntity<PostDTO> create(
-            @RequestPart(name = "postDTO") String postDTOJson, // JSON 문자열로 받음
+            @RequestPart(name = "postDTO") PostDTO postDTO,
             @RequestPart(name = "bookImage") MultipartFile bookImage,
-            @RequestPart(name = "bookAPIImage") MultipartFile bookAPIImage
+            @RequestPart(name = "bookAPIImage") MultipartFile bookAPIImage,
+            Authentication authentication
     ) {
-        PostDTO postDTO = postServiceImpl.register(postDTOJson,bookImage, bookAPIImage);
-        return ResponseEntity.ok(postDTO);
+        String userId = authentication.getName();
+        PostDTO savedPostDTO = postServiceImpl.register(postDTO, bookImage, bookAPIImage, userId);
+        return ResponseEntity.ok(savedPostDTO);
     }
 
 
@@ -46,7 +49,7 @@ public class PostController {
     //게시글 전체 조회
     @GetMapping
     public ResponseEntity<Map<String,Object>> readAll(
-            @RequestParam(defaultValue = "postCreatedAt") String sortType,
+            @RequestParam(defaultValue = "createdAt") String sortType,
             @RequestParam(defaultValue = "desc") String order
     ){
         Page<PostDTO> posts = postServiceImpl.readAll(sortType, order);
@@ -63,14 +66,14 @@ public class PostController {
     }
 
     //게시글 사용자 닉네임으로 조회
-    @GetMapping("/search/{nickname}")
+    @GetMapping("/search/my-posts")
     public ResponseEntity<Page<PostDTO>> readByUserId(
-            @PathVariable("nickname") String nickname,
-            @RequestParam(defaultValue = "postCreatedAt") String sortType,
-            @RequestParam(defaultValue = "desc") String order
+            @RequestParam(defaultValue = "createdAt") String sortType,
+            @RequestParam(defaultValue = "desc") String order,
+            Authentication authentication
     ){
-        User user = userFindRepository.findByNickname(nickname).orElse(null);
-        Page<PostDTO> posts = postServiceImpl.readByUserId(user.getUserId(), sortType, order);
+        String userId = authentication.getName();
+        Page<PostDTO> posts = postServiceImpl.readByUserId(userId, sortType, order);
         return ResponseEntity.ok(posts);
     }
 
@@ -78,7 +81,7 @@ public class PostController {
     @GetMapping("/search/keyword/{title}")
     public ResponseEntity<Page<PostDTO>> readByKeyword(
             @PathVariable("title") String title,
-            @RequestParam(defaultValue = "postCreatedAt") String sortType,
+            @RequestParam(defaultValue = "createdAt") String sortType,
             @RequestParam(defaultValue = "desc") String order
     ){
         Page<PostDTO> posts = postServiceImpl.readByKeyword(title, sortType, order);
@@ -89,7 +92,7 @@ public class PostController {
     @GetMapping("/search/category/{category}")
     public ResponseEntity<Page<PostDTO>> readByCategory(
             @PathVariable("category") BookCategory bookCategory,
-            @RequestParam(defaultValue = "postCreatedAt") String sortType,
+            @RequestParam(defaultValue = "createdAt") String sortType,
             @RequestParam(defaultValue = "desc") String order
         ){
         Page<PostDTO> posts = postServiceImpl.readByCategory(bookCategory, sortType, order);

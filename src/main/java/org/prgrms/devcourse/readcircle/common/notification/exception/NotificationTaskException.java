@@ -1,4 +1,4 @@
-package org.prgrms.devcourse.readcircle.domain.notification.exception;
+package org.prgrms.devcourse.readcircle.common.notification.exception;
 
 public class NotificationTaskException extends RuntimeException {
     private final int statusCode;

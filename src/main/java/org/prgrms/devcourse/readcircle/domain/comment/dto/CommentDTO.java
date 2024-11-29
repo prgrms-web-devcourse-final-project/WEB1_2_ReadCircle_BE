@@ -18,7 +18,6 @@ public class CommentDTO {
     private String commentContent;
     private Long postId;
     private String userId;
-    private LocalDateTime commentCreatedAt;
 
     public Comment toEntity(){
         User user = User.builder()
@@ -30,7 +29,6 @@ public class CommentDTO {
                 .commentContent(commentContent)
                 .postId(postId)
                 .user(user)
-                .commentCreatedAt(commentCreatedAt)
                 .build();
     }
 
@@ -39,6 +37,5 @@ public class CommentDTO {
         this.commentContent = comment.getCommentContent();
         this.postId = comment.getPostId();
         this.userId = comment.getUser().getUserId();
-        this.commentCreatedAt = comment.getCommentCreatedAt();
     }
 }

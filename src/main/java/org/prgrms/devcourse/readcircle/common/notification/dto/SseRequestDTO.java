@@ -1,10 +1,10 @@
-package org.prgrms.devcourse.readcircle.domain.notification.dto;
+package org.prgrms.devcourse.readcircle.common.notification.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.prgrms.devcourse.readcircle.domain.notification.entity.NotificationType;
+import org.prgrms.devcourse.readcircle.common.notification.entity.NotificationType;
 
 @Data
 @NoArgsConstructor

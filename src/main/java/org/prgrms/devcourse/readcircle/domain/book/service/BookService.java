@@ -1,6 +1,7 @@
 package org.prgrms.devcourse.readcircle.domain.book.service;
 
 import lombok.RequiredArgsConstructor;
+import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
 import org.prgrms.devcourse.readcircle.domain.book.dto.request.BookCreateRequest;
 import org.prgrms.devcourse.readcircle.domain.book.dto.request.BookUpdateRequest;
 import org.prgrms.devcourse.readcircle.domain.book.dto.response.BookResponse;
@@ -21,7 +22,7 @@ public class BookService {
 
     // 책 등록
     @Transactional
-    public void createBook(BookCreateRequest request) {
+    public Book createBook(BookCreateRequest request) {
         Book book = Book.builder()
                 .category(request.getBookCategory())
                 .title(request.getTitle())
@@ -32,10 +33,12 @@ public class BookService {
                 .publishDate(request.getPublishDate())
                 .thumbnailUrl(request.getThumbnailUrl())
                 .bookCondition(request.getBookCondition())
+                .process(BookProcess.WAITING)
                 .price(request.getPrice())
                 .build();
 
-        bookRepository.save(book);
+        Book savedBook = bookRepository.save(book);
+        return savedBook;
     }
 
     // 책 조회 (단건)
@@ -66,6 +69,7 @@ public class BookService {
                 request.getPublishDate(),
                 request.getThumbnailUrl(),
                 request.getBookCondition(),
+                request.getProcess(),
                 request.getPrice(),
                 request.isForSale()
         );

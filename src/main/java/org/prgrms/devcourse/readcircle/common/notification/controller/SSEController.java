@@ -1,11 +1,9 @@
-package org.prgrms.devcourse.readcircle.domain.notification.controller;
+package org.prgrms.devcourse.readcircle.common.notification.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.prgrms.devcourse.readcircle.domain.notification.dto.SseRequestDTO;
-import org.prgrms.devcourse.readcircle.domain.notification.service.NotificationServiceImpl;
-import org.prgrms.devcourse.readcircle.domain.notification.service.SSEService;
+import org.prgrms.devcourse.readcircle.common.notification.service.NotificationServiceImpl;
+import org.prgrms.devcourse.readcircle.common.notification.service.SSEService;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
