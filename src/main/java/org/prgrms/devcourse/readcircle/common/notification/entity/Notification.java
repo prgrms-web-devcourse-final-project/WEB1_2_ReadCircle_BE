@@ -1,8 +1,7 @@
-package org.prgrms.devcourse.readcircle.domain.notification.entity;
+package org.prgrms.devcourse.readcircle.common.notification.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.prgrms.devcourse.readcircle.domain.user.entity.User;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

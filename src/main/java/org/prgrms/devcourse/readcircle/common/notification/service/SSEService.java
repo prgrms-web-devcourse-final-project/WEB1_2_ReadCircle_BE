@@ -1,10 +1,8 @@
-package org.prgrms.devcourse.readcircle.domain.notification.service;
+package org.prgrms.devcourse.readcircle.common.notification.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.prgrms.devcourse.readcircle.domain.notification.entity.Notification;
-import org.prgrms.devcourse.readcircle.domain.notification.entity.NotificationType;
-import org.prgrms.devcourse.readcircle.domain.notification.repository.NotificationRepository;
+import org.prgrms.devcourse.readcircle.common.notification.entity.NotificationType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

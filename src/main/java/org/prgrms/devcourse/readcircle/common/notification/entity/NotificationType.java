@@ -1,4 +1,4 @@
-package org.prgrms.devcourse.readcircle.domain.notification.entity;
+package org.prgrms.devcourse.readcircle.common.notification.entity;
 
 public enum NotificationType {
     PURCHASE_RESPONSE_WAITING,      //매입 신청
