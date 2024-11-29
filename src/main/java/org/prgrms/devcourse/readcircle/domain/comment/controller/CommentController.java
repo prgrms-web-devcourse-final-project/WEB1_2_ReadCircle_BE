@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.prgrms.devcourse.readcircle.domain.comment.dto.CommentDTO;
 import org.prgrms.devcourse.readcircle.domain.comment.service.CommentServiceImpl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,9 +31,10 @@ public class CommentController {
         return ResponseEntity.ok(commentService.readAllByPostId(postId));
     }
 
-    @GetMapping("/my-comments/{nickname}")
-    public ResponseEntity<List<CommentDTO>> readAllByUserId(@PathVariable("nickname") String nickname){
-        return ResponseEntity.ok(commentService.readAllByNickname(nickname));
+    @GetMapping("/my-comments")
+    public ResponseEntity<List<CommentDTO>> readAllByUserId(Authentication authentication){
+        String userId = authentication.getName();
+        return ResponseEntity.ok(commentService.readAllByUserId(userId));
     }
 
     @DeleteMapping("/{commentId}")

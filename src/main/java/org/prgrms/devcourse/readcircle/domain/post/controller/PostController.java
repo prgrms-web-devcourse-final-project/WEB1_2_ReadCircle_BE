@@ -10,6 +10,7 @@ import org.prgrms.devcourse.readcircle.domain.user.repository.UserFindRepository
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,14 +64,14 @@ public class PostController {
     }
 
     //게시글 사용자 닉네임으로 조회
-    @GetMapping("/search/{nickname}")
+    @GetMapping("/search/my-posts")
     public ResponseEntity<Page<PostDTO>> readByUserId(
-            @PathVariable("nickname") String nickname,
             @RequestParam(defaultValue = "postCreatedAt") String sortType,
-            @RequestParam(defaultValue = "desc") String order
+            @RequestParam(defaultValue = "desc") String order,
+            Authentication authentication
     ){
-        User user = userFindRepository.findByNickname(nickname).orElse(null);
-        Page<PostDTO> posts = postServiceImpl.readByUserId(user.getUserId(), sortType, order);
+        String userId = authentication.getName();
+        Page<PostDTO> posts = postServiceImpl.readByUserId(userId, sortType, order);
         return ResponseEntity.ok(posts);
     }
 

@@ -46,8 +46,8 @@ public class CommentServiceImpl implements CommentService {
 
     //유저 닉네임으로 댓글 조회 (마이페이지)
     @Override
-    public List<CommentDTO> readAllByNickname(String nickname){
-        List<Comment> commentList = commentRepository.findAllByNickname(nickname);
+    public List<CommentDTO> readAllByUserId(String userId){
+        List<Comment> commentList = commentRepository.findAllByUserId(userId);
         return commentList.stream().map(CommentDTO::new).toList();
     }
 
