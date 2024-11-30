@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.response.ApiResponse;
 import org.prgrms.devcourse.readcircle.domain.user.dto.UserDTO;
-import org.prgrms.devcourse.readcircle.domain.user.dto.request.ChangePasswordRequest;
 import org.prgrms.devcourse.readcircle.domain.user.dto.request.UserSignUpRequest;
 import org.prgrms.devcourse.readcircle.domain.user.dto.request.UserUpdateByAdminRequest;
 import org.prgrms.devcourse.readcircle.domain.user.dto.request.UserUpdateRequest;
@@ -55,13 +54,20 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    @PatchMapping("/me/password") // 비밀번호 변경
-    public ResponseEntity<ApiResponse> changePassword(
-            @RequestBody ChangePasswordRequest changePasswordRequest,
-            Authentication authentication
-    ) {
+    @PostMapping("/me/verify-password")   // 현재 비밀번호 확인
+    public ResponseEntity<ApiResponse> verifyPassword(@RequestParam String currentPassword, Authentication authentication) {
         String userId = authentication.getName();
-        userService.updatePassword(userId, changePasswordRequest.getCurrentPassword(), changePasswordRequest.getNewPassword());
+        userService.verifyCurrentPassword(userId, currentPassword);
+
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+
+    @PutMapping("/me/change-password") // 비밀번호 변경
+    public ResponseEntity<ApiResponse> changePassword(@RequestParam String newPassword, Authentication authentication)
+    {
+        String userId = authentication.getName();
+        userService.updatePassword(userId, newPassword);
 
         return ResponseEntity.ok(ApiResponse.success(null));
     }

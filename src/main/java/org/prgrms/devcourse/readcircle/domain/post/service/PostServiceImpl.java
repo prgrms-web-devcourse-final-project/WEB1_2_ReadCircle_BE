@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.prgrms.devcourse.readcircle.common.upload.PostImageRpository;
+import org.prgrms.devcourse.readcircle.common.upload.PostImageRepository;
 import org.prgrms.devcourse.readcircle.common.util.PagingUtil;
 import org.prgrms.devcourse.readcircle.domain.post.dto.PostDTO;
 import org.prgrms.devcourse.readcircle.domain.post.entity.Post;
@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final UserFindRepository userFindRepository;
-    private final PostImageRpository postImageRpository;
+    private final PostImageRepository postImageRepository;
     private final PagingUtil pagingUtil;
 
     //게시글 등록
@@ -42,8 +42,8 @@ public class PostServiceImpl implements PostService{
 
             //책 이미지 설정
             if (bookImage != null && !bookImage.isEmpty() & bookAPIImage != null && !bookAPIImage.isEmpty()) {
-                String bookImageName = postImageRpository.upload(bookImage);
-                String bookAPIImageName = postImageRpository.upload(bookAPIImage);
+                String bookImageName = postImageRepository.upload(bookImage);
+                String bookAPIImageName = postImageRepository.upload(bookAPIImage);
                 postDTO.setBookImage(bookImageName);
                 postDTO.setBookAPIImage(bookAPIImageName);
             }

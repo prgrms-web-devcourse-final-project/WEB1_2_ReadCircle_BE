@@ -14,6 +14,7 @@ import org.prgrms.devcourse.readcircle.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,20 +67,25 @@ public class UserService {
         return new UserDTO(user);
     }
 
-    @Transactional  // 비밀번호 변경
-    public void updatePassword(String userId, String currentPassword, String newPassword) {
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(UserException.NOT_FOUND::get);
+    public void verifyCurrentPassword(String userId, String currentPassword) {
+        // 사용자 조회
+        User user = userRepository.findByUserId(userId).orElseThrow(UserException.NOT_FOUND::get);
 
-        // 현재 비밀번호가 맞는지 확인
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw UserException.NOT_MATCHED_PASSWORD.get();
         }
+    }
+
+    @Transactional  // 비밀번호 변경
+    public void updatePassword(String userId, String newPassword) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(UserException.NOT_FOUND::get);
 
         // 새 비밀번호 변경
         user.changePassword(newPassword, passwordEncoder);
 
     }
+
 
     @Transactional  // 프로필 사진 변경
     public String updateProfileImage(String userId, MultipartFile image) {
@@ -145,5 +151,7 @@ public class UserService {
                 .orElseThrow(UserException.NOT_FOUND::get);
         return user;
     }
+
+
 }
 

@@ -27,17 +27,18 @@ public class OrderItem {
     private int price;
 
     @Builder
-    public OrderItem(Book book, Order order, int price) {
+    public OrderItem(Book book, int price) {
         this.book = book;
-        this.order = order;
         this.price = price;
 
-        book.changeIsNotForSale(false);
+        // orderItem 이 생성되면 상품의 판매상태를 변경
+        book.changeIsForSale(false);
     }
 
-    public void cancel() {
-        getBook().changeIsForSale(true);
+    public void changeOrder(Order order) {
+        this.order = order;
     }
+
 
 
 

@@ -10,9 +10,9 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Repository
-public class PostImageRpository implements ImageRepository {
+public class PostImageRepository implements ImageRepository {
 
-    @Value("./src/main/resources/static/post_image_storage")
+    @Value("${post.image.upload.path}")
     private String uploadPath;
 
     @Override

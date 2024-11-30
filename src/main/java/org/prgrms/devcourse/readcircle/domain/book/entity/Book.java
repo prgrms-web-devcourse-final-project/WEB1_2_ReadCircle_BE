@@ -95,8 +95,4 @@ public class Book extends BaseTimeEntity {
         this.isForSale = isForSale;
     }
 
-    // 주문이 완료될 때
-    public void changeIsNotForSale(boolean isForSale) {
-        this.isForSale = isForSale;
-    }
 }

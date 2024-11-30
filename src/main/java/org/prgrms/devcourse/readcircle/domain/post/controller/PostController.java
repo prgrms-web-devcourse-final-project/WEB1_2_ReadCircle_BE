@@ -36,7 +36,6 @@ public class PostController {
         return ResponseEntity.ok(postDTO);
     }
 
-
     //게시글 상세 조회
     @GetMapping("/{postId}")
     public ResponseEntity<PostDTO> read(@PathVariable("postId") Long postId){

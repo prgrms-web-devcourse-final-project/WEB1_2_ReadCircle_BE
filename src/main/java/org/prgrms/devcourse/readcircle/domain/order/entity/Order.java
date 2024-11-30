@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.prgrms.devcourse.readcircle.domain.order.entity.enums.DeliveryStatus;
 import org.prgrms.devcourse.readcircle.domain.order.entity.enums.OrderStatus;
+import org.prgrms.devcourse.readcircle.domain.user.entity.User;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -24,10 +25,14 @@ public class Order {
     @Column(name="order_id", nullable = false)
     private Long id;
 
-    @OneToMany(mappedBy = "order")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
@@ -40,25 +45,35 @@ public class Order {
     private LocalDateTime orderDate;
 
     @Builder
-    public Order(Delivery delivery, OrderStatus orderStatus, int totalPrice, OrderItem... orderItems) {
-        this.delivery = delivery;
+    public Order(Delivery delivery, OrderStatus orderStatus, User user, int totalPrice, List<OrderItem> orderItems) {
+        this.delivery = setDelivery(delivery);
+        this.user = setUser(user);
         this.orderStatus = orderStatus;
         this.totalPrice = totalPrice;
-        this.orderItems = List.of(orderItems);
+        this.orderItems = orderItems;
     }
 
-    public void cancel() {
-        if (delivery.getDeliveryStatus() == DeliveryStatus.DELIVERED) {
-            throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
-        }
+    public User setUser(User user) {
+        this.user = user;
+        user.getOrders().add(this);
+        return user;
+    }
 
-        this.changeOrderStatus(OrderStatus.CANCELED);
-        for (OrderItem orderItem : orderItems) {
-            orderItem.cancel();
+    public Delivery setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+        delivery.changeOrder(this);
+        return delivery;
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        if (orderItem != null) {
+            orderItems.add(orderItem);  // 컬렉션에 추가
+            orderItem.changeOrder(this);  // OrderItem의 'order' 필드를 설정
         }
     }
 
     public void changeOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
+    public void changeTotalPrice(int totalPrice) { this.totalPrice = totalPrice; }
 }

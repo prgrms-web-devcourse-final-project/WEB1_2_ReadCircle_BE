@@ -88,8 +88,8 @@ public class PostDTO {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.price = post.getPrice();
-        this.bookImage = post.getBookImage();
-        this.bookAPIImage = post.getBookAPIImage();
+        this.bookImage = "/post_image_storage/"+ post.getBookImage();
+        this.bookAPIImage = "/post_image_storage/"+ post.getBookAPIImage();
         this.bookCategory = post.getBookCategory();
         this.bookCondition = post.getBookCondition();
         this.tradeType = post.getTradeType();

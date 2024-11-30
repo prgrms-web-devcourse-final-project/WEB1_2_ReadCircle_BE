@@ -1,5 +1,6 @@
 package org.prgrms.devcourse.readcircle.domain.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,8 +9,12 @@ import lombok.NoArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.BaseTimeEntity;
 import org.prgrms.devcourse.readcircle.common.value.Address;
 
+import org.prgrms.devcourse.readcircle.domain.order.entity.Order;
 import org.prgrms.devcourse.readcircle.domain.user.entity.enums.Role;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,8 +35,6 @@ public class User extends BaseTimeEntity {
     private String email;
 
     @Column(name = "nickname", nullable = false, length = 30)
-//    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$", message = "닉네임은 특수문자를 제외한 2~10자리여야 합니다.")
-//    @Size(min = 2, max = 10, message = "닉네임은 2~10자이어야 합니다.")
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -41,6 +44,10 @@ public class User extends BaseTimeEntity {
     public Address address;
 
     private String profileImageUrl;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
 
     @Builder
     public User(final String userId, final String password, final String email, final String nickname, final String address, final Role role, final String profileImageUrl) {
