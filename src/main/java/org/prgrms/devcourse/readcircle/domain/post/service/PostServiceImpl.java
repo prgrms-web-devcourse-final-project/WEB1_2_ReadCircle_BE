@@ -31,15 +31,8 @@ public class PostServiceImpl implements PostService{
 
     //게시글 등록
     @Override
-    public PostDTO register(String postDTOJson, MultipartFile bookImage, MultipartFile bookAPIImage) {
-        System.out.println("Received JSON: " + postDTOJson);
-        ObjectMapper objectMapper = new ObjectMapper();
-        PostDTO postDTO=null;
-
+    public PostDTO register(PostDTO postDTO, MultipartFile bookImage, MultipartFile bookAPIImage, String userId) {
         try{
-            // JSON 문자열을 PostDTO 객체로 변환
-            postDTO = objectMapper.readValue(postDTOJson, PostDTO.class);
-
             //책 이미지 설정
             if (bookImage != null && !bookImage.isEmpty() & bookAPIImage != null && !bookAPIImage.isEmpty()) {
                 String bookImageName = postImageRepository.upload(bookImage);
@@ -49,15 +42,12 @@ public class PostServiceImpl implements PostService{
             }
 
             //사용자 검사 및 설정
-            User user = userFindRepository.findByUserId(postDTO.getUserId()).orElseThrow(PostException.NOT_FOUND_USER::getTaskException);
+            User user = userFindRepository.findByUserId(userId).orElseThrow(PostException.NOT_FOUND_USER::getTaskException);
             Post savedPost = postDTO.toEntity();
             savedPost.setUser(user);
 
             postRepository.save(savedPost);
             return new PostDTO(savedPost);
-        } catch (JsonProcessingException e) {
-            System.err.println("JSON 변환 실패: " + e.getMessage());
-            throw PostException.NOT_REGISTERED_JSON_EXCEPTION.getTaskException();
         } catch (Exception e){
             throw PostException.NOT_FOUND_EXCEPTION.getTaskException();
         }

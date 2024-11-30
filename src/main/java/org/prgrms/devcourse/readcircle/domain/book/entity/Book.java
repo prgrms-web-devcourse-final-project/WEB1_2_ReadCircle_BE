@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.BaseTimeEntity;
 import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
+import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
 
 @Entity
 @Getter
@@ -44,6 +45,8 @@ public class Book extends BaseTimeEntity {
 
     private boolean isForSale = true;
 
+    @Enumerated(EnumType.STRING)
+    private BookProcess process;
     @Builder
     public Book(
             final BookCategory category,
@@ -51,6 +54,7 @@ public class Book extends BaseTimeEntity {
             final String publisher, String description,
             final String isbn, String publishDate, String thumbnailUrl,
             final BookCondition bookCondition,
+            final BookProcess process,
             final int price
     ) {
         this.category = category;
@@ -62,6 +66,7 @@ public class Book extends BaseTimeEntity {
         this.publishDate = publishDate;
         this.thumbnailUrl = thumbnailUrl;
         this.bookCondition = bookCondition;
+        this.process = process;
         this.price = price;
     }
 
@@ -75,6 +80,7 @@ public class Book extends BaseTimeEntity {
             final String publishDate,
             final String thumbnailUrl,
             final BookCondition bookCondition,
+            final BookProcess process,
             final int price,
             final boolean isForSale
     ) {
@@ -87,6 +93,7 @@ public class Book extends BaseTimeEntity {
         this.publishDate = publishDate;
         this.thumbnailUrl = thumbnailUrl;
         this.bookCondition = bookCondition;
+        this.process = process;
         this.price = price;
         this.isForSale = isForSale;
     }

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
+import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
 
 @Getter
 public class BookCreateRequest {
@@ -39,4 +40,20 @@ public class BookCreateRequest {
 
     @Min(value = 0, message = "가격은 0 이상이어야 합니다.")
     private int price;
+
+    private BookProcess process;
+
+    public BookCreateRequest(String title, BookCategory bookCategory, String isbn, String author, String publisher, String publishDate, String description, String thumbnailUrl, BookCondition bookCondition, int price, BookProcess process) {
+        this.title = title;
+        this.bookCategory = bookCategory;
+        this.isbn = isbn;
+        this.author = author;
+        this.publisher = publisher;
+        this.publishDate = publishDate;
+        this.description = description;
+        this.thumbnailUrl = thumbnailUrl;
+        this.bookCondition = bookCondition;
+        this.price = price;
+        this.process = process;
+    }
 }
