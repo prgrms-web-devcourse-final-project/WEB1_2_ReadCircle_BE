@@ -26,6 +26,7 @@ public class CartServiceImpl implements CartService{
     private final UserService userService;
     private final BookService bookService;
 
+    @Override
     public void addCartItem(Long bookId, String userId){
         User user = userService.findUserByUserId(userId);
         Book book = bookService.getBookById(bookId);
@@ -50,6 +51,7 @@ public class CartServiceImpl implements CartService{
         }
     }
 
+    @Override
     public List<CartItemDTO> findByUserId(String userId){
         Cart cart = cartRepository.findByUserIdWithCartItems(userId).orElseThrow(CartException.NOT_FOUND_CART_EXCEPTION::getTaskException);
         return cart.getCartItems()
@@ -57,6 +59,7 @@ public class CartServiceImpl implements CartService{
                 .toList();
     }
 
+    @Override
     public void deleteCartItem(Long cartItemId, String userId){
         Cart cart = cartRepository.findByUserId(userId).orElseThrow(CartException.NOT_FOUND_CART_EXCEPTION::getTaskException);
         try{
