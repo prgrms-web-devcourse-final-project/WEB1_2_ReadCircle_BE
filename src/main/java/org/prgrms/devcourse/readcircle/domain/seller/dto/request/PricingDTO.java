@@ -12,7 +12,6 @@ import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PricingDTO {
-    private Long bookId;
     private int depositAmount;
     private int price;
     private BookProcess process;
