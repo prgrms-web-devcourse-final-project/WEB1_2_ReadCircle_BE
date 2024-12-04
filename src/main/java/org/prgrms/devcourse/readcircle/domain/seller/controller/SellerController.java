@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
 import org.prgrms.devcourse.readcircle.common.response.ApiResponse;
+import org.prgrms.devcourse.readcircle.domain.book.dto.response.BookResponse;
 import org.prgrms.devcourse.readcircle.domain.book.service.BookService;
 import org.prgrms.devcourse.readcircle.domain.seller.dto.request.PricingDTO;
 import org.prgrms.devcourse.readcircle.domain.seller.dto.request.SellerBookRequest;
@@ -38,11 +39,13 @@ public class SellerController {
     //seller 전체 조회 - 사용자
     @GetMapping
     public ResponseEntity<ApiResponse> ReadAll(
-            @RequestParam(required=false, defaultValue = "REGISTRATION") BookProcess process,
+            @RequestParam(required=false, defaultValue = "WAITING") BookProcess process,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
             Authentication authentication
     ){
         String userId = authentication.getName();
-        Page<SellerDTO> sellerDTO = sellerService.findByUserId(userId,process);
+        Page<SellerDTO> sellerDTO = sellerService.findByUserId(userId, process, page, size);
         return ResponseEntity.ok(ApiResponse.success(sellerDTO));
     }
 
@@ -50,15 +53,13 @@ public class SellerController {
     @GetMapping("/management")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse> ReadAllByAdmin(
-            @RequestParam(required=false, defaultValue = "WAITING") BookProcess bookProcess
+            @RequestParam(required=false, defaultValue = "WAITING") BookProcess process,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
     ){
-        Page<SellerDTO> sellerDTO = sellerService.findByAdmin(bookProcess);
+        Page<SellerDTO> sellerDTO = sellerService.findByAdmin(process, page, size);
         return ResponseEntity.ok(ApiResponse.success(sellerDTO));
     }
-
-    //seller 단건 조회
-
-
 
     //seller 매입가 결정 - 관리자
     @PutMapping("/management/{sellerId}")
@@ -67,8 +68,8 @@ public class SellerController {
             @PathVariable("sellerId") Long sellerId,
             @RequestBody PricingDTO pricingDTO
     ){
-        sellerService.pricing(sellerId, pricingDTO);
-        return ResponseEntity.ok(ApiResponse.success(null));
+        BookResponse book = sellerService.pricing(sellerId, pricingDTO);
+        return ResponseEntity.ok(ApiResponse.success(book));
     }
 
 
