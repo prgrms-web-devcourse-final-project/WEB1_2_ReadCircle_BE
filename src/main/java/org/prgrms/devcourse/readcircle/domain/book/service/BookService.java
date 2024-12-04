@@ -84,4 +84,10 @@ public class BookService {
     }
 
 
+    // 책 객체 조회 (단건)
+    public Book getBookById(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(BookException.NOT_FOUND::get);
+        return book;
+    }
 }

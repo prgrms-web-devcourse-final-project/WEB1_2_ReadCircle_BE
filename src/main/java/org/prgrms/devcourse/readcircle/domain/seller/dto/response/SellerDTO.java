@@ -7,6 +7,7 @@ import org.prgrms.devcourse.readcircle.domain.seller.entity.Seller;
 @Getter
 @RequiredArgsConstructor
 public class SellerDTO {
+    private Long sellerId;
     private String userId;
     private Long bookId;
     private String bank;
@@ -15,11 +16,12 @@ public class SellerDTO {
     private int depositAmount;
 
     public SellerDTO(Seller seller) {
+        this.sellerId = seller.getSellerId();
+        this.userId = seller.getUserId();
+        this.bookId = seller.getBook().getId();
         this.bank = seller.getBank();
         this.account = seller.getAccount();
         this.accountOwner = seller.getAccountOwner();
-        this.userId = seller.getUserId();
-        this.bookId = seller.getBook().getId();
         this.depositAmount = seller.getDepositAmount();
     }
 }

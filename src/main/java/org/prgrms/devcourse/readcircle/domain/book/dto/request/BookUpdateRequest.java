@@ -48,11 +48,6 @@ public class BookUpdateRequest {
 
     private BookProcess process;
 
-    public BookUpdateRequest(int price, BookProcess process, BookCondition condition){
-        this.price = price;
-        this.process = process;
-        this.bookCondition = condition;
-    }
     public BookUpdateRequest(String title, BookCategory bookCategory, String isbn, String author, String publisher, String publishDate, String description, String thumbnailUrl, BookCondition bookCondition, int price, BookProcess process, boolean isForSale) {
         this.title = title;
         this.category = bookCategory;
