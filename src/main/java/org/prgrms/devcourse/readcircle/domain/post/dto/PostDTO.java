@@ -42,7 +42,7 @@ public class PostDTO {
     @NotBlank(message = "거래 유형 설정은 필수입니다.")
     private TradeType tradeType;
 
-    @NotBlank(message = "ISBN 설정은 필수입니다.")
+//    @NotBlank(message = "ISBN 설정은 필수입니다.")
     private String isbn;
     private String bookAPIImage;
     private String author;
@@ -55,7 +55,7 @@ public class PostDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @NotNull
+//    @NotNull
     private String userId;
     private String nickname;
 

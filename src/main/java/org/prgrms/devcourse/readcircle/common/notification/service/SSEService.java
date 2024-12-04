@@ -17,7 +17,7 @@ public class SSEService {
     private final Map<String, SseEmitter> sseEmitterMap = new ConcurrentHashMap<>();
 
     public SseEmitter subscribe(String userId){
-        Long timeout = 1 * 60 * 1000L;
+        Long timeout = 0L;
         SseEmitter sseEmitter = new SseEmitter(timeout);
 
         try{

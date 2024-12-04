@@ -1,6 +1,7 @@
 package org.prgrms.devcourse.readcircle.domain.auth.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
 
@@ -29,15 +31,18 @@ public class JWTUtil {
 
     public String createToken(Map<String, Object> valueMap, int min) {
         SecretKey secretKey = getSecretKey();  // 비밀 키 얻기
+
         Date now = new Date();  // 토큰 발행 시간
 
         // JWT 토큰 생성
         return Jwts.builder()
-                .setHeaderParam("alg", "HS256")  // 알고리즘 지정
-                .setHeaderParam("type", "JWT")   // 토큰 타입 지정
-                .setIssuedAt(now)                // 발행 시간
-                .setExpiration(new Date(now.getTime() + min * 60 * 1000))  // 만료 시간 (분 단위)
-                .setClaims(valueMap)             // 페이로드에 데이터 추가
+                .header().add("alg", "HS256")//HS256알고리즘으로 헤더에 alg필드로 추가
+                .add("type", "JWT")//헤더에 타입 필드를 추가하고 값으로 jwt 설정
+                .and()
+                .issuedAt(now)       //토큰 발행 시간
+                .expiration(         //토큰 만료 시간
+                        new Date( now.getTime() + Duration.ofMinutes(min).toMillis()) )
+                .claims(valueMap)             // 페이로드에 데이터 추가
                 .signWith(secretKey)             // 서명
                 .compact();                     // 토큰 문자열 반환
     }
@@ -48,14 +53,23 @@ public class JWTUtil {
 
         try {
             // JWT 파싱 및 검증
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)  // 서명 키 설정
+            Claims claims = Jwts.parser()
+                    .verifyWith(secretKey)
                     .build()
-                    .parseClaimsJws(token)  // JWT 파싱
-                    .getBody();             // 페이로드 추출
+                    .parseSignedClaims(token).getPayload();             // 페이로드 추출
+
+            if (claims.getExpiration() != null) {
+                log.info("Expiration Time: " + claims.getExpiration());
+            } else {
+                log.warn("Expiration time not found in claims.");
+            }
 
             log.info("--- claim " + claims);
             return claims;
+        } catch (ExpiredJwtException e) {
+            // 만료된 토큰 처리
+            log.error("Expired JWT token: " + e.getMessage());
+            throw new RuntimeException("Token has expired", e);
         } catch (JwtException | IllegalArgumentException e) {
             // 토큰 검증 실패 시 처리 (만료, 서명 불일치 등)
             log.error("Invalid JWT token: " + e.getMessage());

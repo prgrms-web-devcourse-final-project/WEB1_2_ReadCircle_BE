@@ -55,7 +55,7 @@ public class OrderService {
         Order order = Order.builder()
                 .delivery(delivery)
                 .user(user)
-                .orderStatus(OrderStatus.ORDERED)
+                .orderStatus(OrderStatus.PAID)
                 .orderItems(new ArrayList<>())
                 .totalPrice(0)
                 .build();
@@ -64,6 +64,10 @@ public class OrderService {
         int totalPrice = 0;
         for (Long bookId : orderRequest.getBookList()) {
             Book book = bookRepository.findById(bookId).orElseThrow(BookException.NOT_FOUND::get);
+
+            if(!book.isForSale()) {
+                throw new RuntimeException("Book is not for sale");
+            }
 
             // OrderItem 생성
             OrderItem orderItem = OrderItem.builder()
@@ -104,6 +108,7 @@ public class OrderService {
         }
 
         OrderArchive orderArchive = new OrderArchive(
+                order.getId(),
                 order.getUser().getId(),   // User의 ID만 저장
                 order.getDelivery().getId(),  // Delivery의 ID만 저장
                 order.getOrderStatus().name(),  // Enum 값을 String으로 저장
@@ -119,10 +124,11 @@ public class OrderService {
     }
 
     // 주문 상세 조회
-    public OrderResponse getOrderDetails(Long orderId) {
+    public OrderResponse getOrderDetails(Long orderId, String userId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다. ID: " + orderId));
 
+        if(!(order.getUser().getUserId().equals(userId))) { throw UserException.FORBIDDEN_ACCESS.get(); }
         return OrderResponse.from(order);
     }
 
@@ -134,5 +140,30 @@ public class OrderService {
 
         return orders.map(OrderResponse::from);
     }
+
+    @Transactional // 주문 상태 변경
+    public void updateOrderStatus(Long orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다. ID: " + orderId));
+
+        order.changeOrderStatus(newStatus);
+    }
+
+    @Transactional // 배송 상태 변경
+    public void updateDeliveryStatus(Long orderId, DeliveryStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다. ID: " + orderId));
+
+        Delivery delivery = order.getDelivery();
+        delivery.changeDeliveryStatus(newStatus);
+    }
+
+    // 모든 주문 목록 조회(관리자)
+    public Page<OrderResponse> getAllOrders(Pageable pageable) {
+        Page<Order> orders = orderRepository.findAll(pageable);
+
+        return orders.map(OrderResponse::from);
+    }
+
 
 }

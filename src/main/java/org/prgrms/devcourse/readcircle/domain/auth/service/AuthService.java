@@ -22,7 +22,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JWTUtil jwtUtil;
 
-    private static final int ACCESS_TOKEN_EXPIRATION = 120; // 2시간
+    private static final int ACCESS_TOKEN_EXPIRATION = 600; // 2시간
     private static final int REFRESH_TOKEN_EXPIRATION = 60 * 24 * 7; // 7일
 
     public Map<String, String> login(LoginDTO loginDTO, HttpServletResponse response) {

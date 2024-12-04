@@ -34,11 +34,11 @@ public class PostServiceImpl implements PostService{
     public PostDTO register(PostDTO postDTO, MultipartFile bookImage, MultipartFile bookAPIImage, String userId) {
         try{
             //책 이미지 설정
-            if (bookImage != null && !bookImage.isEmpty() & bookAPIImage != null && !bookAPIImage.isEmpty()) {
+            if (bookImage != null && !bookImage.isEmpty()) {
                 String bookImageName = postImageRepository.upload(bookImage);
-                String bookAPIImageName = postImageRepository.upload(bookAPIImage);
+//                String bookAPIImageName = postImageRepository.upload(bookAPIImage);
                 postDTO.setBookImage(bookImageName);
-                postDTO.setBookAPIImage(bookAPIImageName);
+//                postDTO.setBookAPIImage(bookAPIImageName);
             }
 
             //사용자 검사 및 설정

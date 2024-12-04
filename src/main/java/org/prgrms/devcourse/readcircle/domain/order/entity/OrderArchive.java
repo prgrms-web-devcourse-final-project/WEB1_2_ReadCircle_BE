@@ -19,7 +19,8 @@ public class OrderArchive {
     @Column(name="order_archive_id", nullable = false)
     private Long id;
 
-    private Long userId;  // 연관된 User의 ID만 저장
+    private Long orderId;
+    private Long userNo;  // 연관된 User의 ID만 저장
     private Long deliveryId;  // 연관된 Delivery의 ID만 저장
     private String orderStatus;
     private int totalPrice;
@@ -27,8 +28,9 @@ public class OrderArchive {
     private LocalDateTime cancelledDate;
 
     @Builder
-    public OrderArchive(Long userId, Long deliveryId, String orderStatus, int totalPrice, LocalDateTime orderDate, LocalDateTime cancelledDate) {
-        this.userId = userId;
+    public OrderArchive(Long orderId, Long userNo, Long deliveryId, String orderStatus, int totalPrice, LocalDateTime orderDate, LocalDateTime cancelledDate) {
+        this.orderId = orderId;
+        this.userNo = userNo;
         this.deliveryId = deliveryId;
         this.orderStatus = orderStatus;
         this.totalPrice = totalPrice;

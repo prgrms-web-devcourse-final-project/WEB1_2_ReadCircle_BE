@@ -5,8 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.prgrms.devcourse.readcircle.domain.order.entity.enums.DeliveryStatus;
 import org.prgrms.devcourse.readcircle.domain.order.entity.enums.OrderStatus;
+import org.prgrms.devcourse.readcircle.domain.payment.entity.Payment;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -35,6 +35,9 @@ public class Order {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "order")
+    private Payment payment;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
