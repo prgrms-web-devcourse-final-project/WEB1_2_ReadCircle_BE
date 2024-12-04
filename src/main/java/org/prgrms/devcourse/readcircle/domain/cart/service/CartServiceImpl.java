@@ -14,6 +14,7 @@ import org.prgrms.devcourse.readcircle.domain.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,9 +39,11 @@ public class CartServiceImpl implements CartService{
         });
 
         //Cart에 중복된 책 검사
-        Optional<CartItem> existItem = cart.getCartItems().stream()
-                                            .filter(item -> item.getBook().getId().equals(bookId))
-                                            .findFirst();
+        Optional<CartItem> existItem = Optional.ofNullable(cart.getCartItems())
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(item -> item.getBook().getId().equals(bookId))
+                .findFirst();
 
         //중복책 없으면 Cart에 추가
         if(existItem.isEmpty()){
