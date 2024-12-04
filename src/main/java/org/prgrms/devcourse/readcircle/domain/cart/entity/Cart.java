@@ -25,11 +25,11 @@ public class Cart extends BaseTimeEntity {
     private User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<CartItem> cartItems = new ArrayList<>();
 
     public Cart(User user){
         this.user = user;
     }
     public void changeCartItems(List<CartItem> cartItems){ this.cartItems = cartItems; }
-
 }
