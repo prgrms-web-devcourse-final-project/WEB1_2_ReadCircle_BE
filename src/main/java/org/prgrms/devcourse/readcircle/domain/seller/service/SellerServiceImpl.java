@@ -4,6 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
 import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
+import org.prgrms.devcourse.readcircle.common.notification.entity.Notification;
+import org.prgrms.devcourse.readcircle.common.notification.entity.NotificationType;
+import org.prgrms.devcourse.readcircle.common.notification.service.NotificationServiceImpl;
+import org.prgrms.devcourse.readcircle.common.notification.service.SSEService;
 import org.prgrms.devcourse.readcircle.common.util.PagingUtil;
 import org.prgrms.devcourse.readcircle.domain.book.dto.request.BookCreateRequest;
 import org.prgrms.devcourse.readcircle.domain.book.dto.request.BookUpdateRequest;
@@ -28,6 +32,8 @@ public class SellerServiceImpl implements SellerService{
     private final SellerRepository sellerRepository;
     private final BookService bookService;
     private final PagingUtil pagingUtil;
+    private final SSEService sseService;
+    private final NotificationServiceImpl notificationService;
 
     @Override
     public SellerDTO register(SellerBookRequest request, String userId){
@@ -54,13 +60,19 @@ public class SellerServiceImpl implements SellerService{
 
         try {
             Seller seller = new Seller(
-                book,
-                userId,
-                request.getBank(),
-                request.getAccount(),
-                request.getAccountOwner()
+                    book,
+                    userId,
+                    request.getBank(),
+                    request.getAccount(),
+                    request.getAccountOwner()
             );
             Seller savedSeller = sellerRepository.save(seller);
+
+            String message = book.getTitle()+"("+book.getIsbn()+") 도서 판매 신청이 완료되었습니다.";
+            NotificationType type = NotificationType.PURCHASE_RESPONSE_WAITING;
+            Notification noti = notificationService.saveNotification(userId, message, type);
+            sseService.sendNotification(userId, message, type, noti.getNotificationId());
+
             return new SellerDTO(savedSeller);
         }catch (Exception e){
             System.err.println(e.getMessage());
@@ -69,24 +81,23 @@ public class SellerServiceImpl implements SellerService{
     }
 
     @Override
-    public Page<SellerDTO> findByUserId(String userId, BookProcess process){
-        Pageable pageable = pagingUtil.getPageable();
+    public Page<SellerDTO> findByUserId(String userId, BookProcess process, int page, int size){
+        Pageable pageable = pagingUtil.getNewPageable(page, size);
         Page<Seller> sellers = sellerRepository.getSellerByUserId(userId, process, pageable);
         return sellers.map(SellerDTO::new);
     }
 
     @Override
-    public Page<SellerDTO> findByAdmin(BookProcess process){
-        Pageable pageable = pagingUtil.getPageable();
+    public Page<SellerDTO> findByAdmin(BookProcess process, int page, int size){
+        Pageable pageable = pagingUtil.getNewPageable(page, size);
         Page<Seller> sellers = sellerRepository.getSellerByAdmin(process, pageable);
         return sellers.map(SellerDTO::new);
     }
 
     @Override
-    public void pricing(Long sellerId, PricingDTO pricingDTO){
+    public BookResponse pricing(Long sellerId, PricingDTO pricingDTO){
         Seller seller = sellerRepository.findById(sellerId).orElseThrow(SellerException.NOT_FOUND_SELLER_EXCEPTION::getTaskException);
-        BookResponse response = bookService.getBook(pricingDTO.getBookId());
-        Book book;
+        Book response = seller.getBook();
         try{
             seller.changeDepositAmount(pricingDTO.getDepositAmount());
             BookUpdateRequest request = new BookUpdateRequest(
@@ -98,12 +109,13 @@ public class SellerServiceImpl implements SellerService{
                     response.getPublishDate(),
                     response.getDescription(),
                     response.getThumbnailUrl(),
-                    response.getBookCondition(),
+                    pricingDTO.getBookCondition(),
                     response.getPrice(),
-                    response.getProcess(),
+                    pricingDTO.getProcess(),
                     response.isForSale()
             );
             bookService.updateBook(response.getId(), request);
+            return BookResponse.from(response);
         }catch (Exception e){
             throw SellerException.NOT_MODIFIED_EXCEPTION.getTaskException();
         }
