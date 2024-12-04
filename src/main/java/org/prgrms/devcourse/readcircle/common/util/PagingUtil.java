@@ -1,6 +1,5 @@
 package org.prgrms.devcourse.readcircle.common.util;
 
-import org.prgrms.devcourse.readcircle.domain.purchase.entity.enums.PurchaseStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
