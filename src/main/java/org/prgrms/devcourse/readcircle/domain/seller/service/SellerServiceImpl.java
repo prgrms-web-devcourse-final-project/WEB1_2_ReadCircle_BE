@@ -1,13 +1,12 @@
 package org.prgrms.devcourse.readcircle.domain.seller.service;
 
 import lombok.RequiredArgsConstructor;
-import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
-import org.prgrms.devcourse.readcircle.common.enums.BookCondition;
 import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
+import org.prgrms.devcourse.readcircle.common.notification.dto.MessageDTO;
 import org.prgrms.devcourse.readcircle.common.notification.entity.Notification;
 import org.prgrms.devcourse.readcircle.common.notification.entity.NotificationType;
-import org.prgrms.devcourse.readcircle.common.notification.service.NotificationServiceImpl;
-import org.prgrms.devcourse.readcircle.common.notification.service.SSEService;
+import org.prgrms.devcourse.readcircle.common.notification.service.NotificationService;
+import org.prgrms.devcourse.readcircle.common.notify.service.SseService;
 import org.prgrms.devcourse.readcircle.common.util.PagingUtil;
 import org.prgrms.devcourse.readcircle.domain.book.dto.request.BookCreateRequest;
 import org.prgrms.devcourse.readcircle.domain.book.dto.request.BookUpdateRequest;
@@ -32,8 +31,9 @@ public class SellerServiceImpl implements SellerService{
     private final SellerRepository sellerRepository;
     private final BookService bookService;
     private final PagingUtil pagingUtil;
-    private final SSEService sseService;
-    private final NotificationServiceImpl notificationService;
+    //private final SSEService sseService;
+    private final SseService sseService;
+    private final NotificationService notificationService;
 
     @Override
     public SellerDTO register(SellerBookRequest request, String userId){
@@ -69,9 +69,11 @@ public class SellerServiceImpl implements SellerService{
             Seller savedSeller = sellerRepository.save(seller);
 
             String message = book.getTitle()+"("+book.getIsbn()+") 도서 판매 신청이 완료되었습니다.";
-            NotificationType type = NotificationType.PURCHASE_RESPONSE_WAITING;
-            Notification noti = notificationService.saveNotification(userId, message, type);
-            sseService.sendNotification(userId, message, type, noti.getNotificationId());
+            MessageDTO messageDTO = new MessageDTO(message);
+            NotificationType type = NotificationType.PURCHASE_WAITING;
+
+            Notification noti = notificationService.saveNotification("admin", message, type);
+            sseService.makeNotification(userId, noti, messageDTO );
 
             return new SellerDTO(savedSeller);
         }catch (Exception e){
