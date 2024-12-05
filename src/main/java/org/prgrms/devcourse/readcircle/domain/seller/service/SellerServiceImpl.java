@@ -6,7 +6,7 @@ import org.prgrms.devcourse.readcircle.common.notification.dto.MessageDTO;
 import org.prgrms.devcourse.readcircle.common.notification.entity.Notification;
 import org.prgrms.devcourse.readcircle.common.notification.entity.NotificationType;
 import org.prgrms.devcourse.readcircle.common.notification.service.NotificationService;
-import org.prgrms.devcourse.readcircle.common.notify.service.SseService;
+import org.prgrms.devcourse.readcircle.common.notification.service.SseService;
 import org.prgrms.devcourse.readcircle.common.util.PagingUtil;
 import org.prgrms.devcourse.readcircle.domain.book.dto.request.BookCreateRequest;
 import org.prgrms.devcourse.readcircle.domain.book.dto.request.BookUpdateRequest;
@@ -31,7 +31,6 @@ public class SellerServiceImpl implements SellerService{
     private final SellerRepository sellerRepository;
     private final BookService bookService;
     private final PagingUtil pagingUtil;
-    //private final SSEService sseService;
     private final SseService sseService;
     private final NotificationService notificationService;
 
