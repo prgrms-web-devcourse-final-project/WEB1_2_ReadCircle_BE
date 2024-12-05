@@ -9,10 +9,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("SELECT o FROM Order o WHERE o.user.userId = :userId")
     Page<Order> findAllByUserId(@Param("userId") String userId, Pageable pageable);
+
+    Optional<Order> findByMerchantUid(String merchantUid);
 
 }

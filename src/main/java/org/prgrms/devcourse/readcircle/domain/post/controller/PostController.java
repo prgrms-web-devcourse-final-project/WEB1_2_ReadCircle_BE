@@ -25,18 +25,16 @@ public class PostController {
     private final PostServiceImpl postServiceImpl;
     private final UserFindRepository userFindRepository;
 
-
     //게시글 등록
     @PostMapping(value = "/create")
     public ResponseEntity<PostDTO> create(
             @RequestPart(name = "postDTO") PostDTO postDTO,
             @RequestPart(name = "bookImage") MultipartFile bookImage,
-            @RequestPart(name = "bookAPIImage", required = false) MultipartFile bookAPIImage,
             Authentication authentication
     ) {
         log.info("Received book image: {}", bookImage.getOriginalFilename());  // 로그 추가
         String userId = authentication.getName();
-        PostDTO savedPostDTO = postServiceImpl.register(postDTO, bookImage, bookAPIImage, userId);
+        PostDTO savedPostDTO = postServiceImpl.register(postDTO, bookImage, userId);
         return ResponseEntity.ok(savedPostDTO);
     }
 

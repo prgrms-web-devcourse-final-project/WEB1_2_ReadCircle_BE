@@ -31,7 +31,7 @@ public class PostServiceImpl implements PostService{
 
     //게시글 등록
     @Override
-    public PostDTO register(PostDTO postDTO, MultipartFile bookImage, MultipartFile bookAPIImage, String userId) {
+    public PostDTO register(PostDTO postDTO, MultipartFile bookImage, String userId) {
         try{
             //책 이미지 설정
             if (bookImage != null && !bookImage.isEmpty()) {

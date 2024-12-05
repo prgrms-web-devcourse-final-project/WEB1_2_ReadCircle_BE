@@ -15,6 +15,8 @@ import org.prgrms.devcourse.readcircle.domain.order.entity.enums.DeliveryStatus;
 import org.prgrms.devcourse.readcircle.domain.order.entity.enums.OrderStatus;
 import org.prgrms.devcourse.readcircle.domain.order.repository.OrderArchiveRepository;
 import org.prgrms.devcourse.readcircle.domain.order.repository.OrderRepository;
+import org.prgrms.devcourse.readcircle.domain.payment.entity.Payment;
+import org.prgrms.devcourse.readcircle.domain.payment.entity.enums.PaymentStatus;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
 import org.prgrms.devcourse.readcircle.domain.user.exception.UserException;
 import org.prgrms.devcourse.readcircle.domain.user.repository.UserRepository;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -55,9 +58,10 @@ public class OrderService {
         Order order = Order.builder()
                 .delivery(delivery)
                 .user(user)
-                .orderStatus(OrderStatus.PAID)
+                .orderStatus(OrderStatus.PENDING)
                 .orderItems(new ArrayList<>())
                 .totalPrice(0)
+                .merchantUid(UUID.randomUUID().toString())
                 .build();
 
         // 주문 상품 리스트 생성
@@ -80,6 +84,14 @@ public class OrderService {
         }
 
         order.changeTotalPrice(totalPrice);
+
+        Payment.builder()
+                .order(order)
+                .userId(userId)
+                .paymentMethod(orderRequest.getPaymentMethod())
+                .amount(totalPrice)
+                .status(PaymentStatus.PENDING)
+                .build();
 
         Order savedOrder = orderRepository.save(order);
 

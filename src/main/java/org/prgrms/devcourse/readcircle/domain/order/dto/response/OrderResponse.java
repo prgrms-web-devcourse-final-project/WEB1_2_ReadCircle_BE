@@ -2,6 +2,7 @@ package org.prgrms.devcourse.readcircle.domain.order.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.prgrms.devcourse.readcircle.domain.order.dto.request.OrderRequest;
 import org.prgrms.devcourse.readcircle.domain.order.entity.Order;
 import org.prgrms.devcourse.readcircle.domain.order.entity.OrderItem;
 import org.prgrms.devcourse.readcircle.domain.order.entity.enums.DeliveryStatus;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OrderResponse {
     private Long orderId;
+    private String merchantUid;
     private List<OrderItemResponse> orderItems;
     private String UserId;
     private String nickname;
@@ -26,6 +28,7 @@ public class OrderResponse {
     public static OrderResponse from(final Order order) {
         return new OrderResponse(
                 order.getId(),
+                order.getMerchantUid(),
                 order.getOrderItems().stream()
                         .map(OrderItemResponse::from)
                         .collect(Collectors.toList()),
@@ -37,6 +40,8 @@ public class OrderResponse {
                 order.getTotalPrice()
         );
     }
+
+
 
 
 }

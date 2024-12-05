@@ -25,6 +25,9 @@ public class Order {
     @Column(name="order_id", nullable = false)
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    private String merchantUid; // 포트원 결제 고유 ID
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -48,12 +51,13 @@ public class Order {
     private LocalDateTime orderDate;
 
     @Builder
-    public Order(Delivery delivery, OrderStatus orderStatus, User user, int totalPrice, List<OrderItem> orderItems) {
+    public Order(Delivery delivery, OrderStatus orderStatus, User user, int totalPrice, List<OrderItem> orderItems, String merchantUid) {
         this.delivery = setDelivery(delivery);
         this.user = setUser(user);
         this.orderStatus = orderStatus;
         this.totalPrice = totalPrice;
         this.orderItems = orderItems;
+        this.merchantUid = merchantUid;
     }
 
     public User setUser(User user) {
@@ -79,4 +83,6 @@ public class Order {
         this.orderStatus = orderStatus;
     }
     public void changeTotalPrice(int totalPrice) { this.totalPrice = totalPrice; }
+
+    public void changePayment(Payment payment) { this.payment = payment; }
 }
