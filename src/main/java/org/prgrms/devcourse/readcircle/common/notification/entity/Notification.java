@@ -27,4 +27,11 @@ public class Notification extends BaseTimeEntity {
     private NotificationType type;
 
     private String message;
+
+    @Builder.Default
+    private boolean isRead = false;
+
+    public void markAsRead(){
+        this.isRead = true;
+    }
 }

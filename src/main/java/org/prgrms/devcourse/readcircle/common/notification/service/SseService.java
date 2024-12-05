@@ -1,10 +1,8 @@
-package org.prgrms.devcourse.readcircle.common.notify.service;
+package org.prgrms.devcourse.readcircle.common.notification.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.prgrms.devcourse.readcircle.common.notification.dto.MessageDTO;
 import org.prgrms.devcourse.readcircle.common.notification.entity.Notification;
-import org.prgrms.devcourse.readcircle.common.notification.entity.NotificationType;
-import org.prgrms.devcourse.readcircle.common.notification.exception.NotificationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
