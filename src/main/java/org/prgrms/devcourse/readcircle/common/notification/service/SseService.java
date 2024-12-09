@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Log4j2
 public class SseService {
     private final Map<String, SseEmitter> emittersMap = new ConcurrentHashMap<>();
-    private static final Long DEFAULT_TIMEOUT = 60 * 1000L;     //10초
+    private static final Long DEFAULT_TIMEOUT = 10 * 1000L;     //10초
 
     //sse 연결
     public SseEmitter connect(String userId){
@@ -30,13 +30,18 @@ public class SseService {
         }
 
         emitter.onCompletion(() -> {
-            log.info("onCompletion callback");
+            log.info("SSE completed : "+ userId);
             this.emittersMap.remove(userId);
         });
 
         emitter.onTimeout(() -> {
-            log.info("onTimeout callback");
+            log.info("SSE time out : "+ userId);
             emitter.complete();
+        });
+
+        emitter.onError((e)->{
+            log.info("SSE error callback : "+ e.getMessage());
+            emitter.completeWithError(e);
         });
 
         return emitter;

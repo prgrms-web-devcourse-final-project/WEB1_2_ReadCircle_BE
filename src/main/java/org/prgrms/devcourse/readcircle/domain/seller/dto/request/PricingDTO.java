@@ -15,5 +15,7 @@ public class PricingDTO {
     private int depositAmount;
     private int price;
     private BookProcess process;
+
     private BookCondition bookCondition;
 }
+

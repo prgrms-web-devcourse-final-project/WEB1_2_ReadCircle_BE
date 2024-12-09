@@ -12,6 +12,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByToUserId(String toUserId);
 
     @Modifying
-    @Query(value = "DELETE FROM Notification WHERE created_at < now() - interval 1 DAY; ", nativeQuery = true)
+    @Query(value = "DELETE FROM Notification WHERE created_at < now() - interval 7 DAY; ", nativeQuery = true)
     void deleteNotifications();
 }

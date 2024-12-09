@@ -67,12 +67,10 @@ public class SellerServiceImpl implements SellerService{
             );
             Seller savedSeller = sellerRepository.save(seller);
 
+            //SSE 알림 - message와 tpye, 알림 대상자 설정 필요
             String message = book.getTitle()+"("+book.getIsbn()+") 도서 판매 신청이 완료되었습니다.";
-            MessageDTO messageDTO = new MessageDTO(message);
             NotificationType type = NotificationType.PURCHASE_WAITING;
-
-            Notification noti = notificationService.saveNotification("admin", message, type);
-            sseService.makeNotification(userId, noti, messageDTO );
+            notificationService.saveNotification("admin", message, type);
 
             return new SellerDTO(savedSeller);
         }catch (Exception e){
@@ -116,6 +114,13 @@ public class SellerServiceImpl implements SellerService{
                     response.isForSale()
             );
             bookService.updateBook(response.getId(), request);
+
+            //SSE 알림 - message와 tpye, 알림 대상자 설정 필요
+            String message = response.getTitle()+"("+response.getIsbn()+") 도서의 가격이 "
+                            +pricingDTO.getPrice()+"원으로 책정되었습니다.";
+            NotificationType type = NotificationType.PURCHASE_SET;
+            notificationService.saveNotification(seller.getUserId(), message, type);
+
             return BookResponse.from(response);
         }catch (Exception e){
             throw SellerException.NOT_MODIFIED_EXCEPTION.getTaskException();
