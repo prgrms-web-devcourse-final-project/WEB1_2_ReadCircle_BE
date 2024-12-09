@@ -26,15 +26,14 @@ class ReadCircleApplicationTests {
     public PortOneClient portOneClient;
 
     // Logger 객체 생성
-    private static final Logger log = LoggerFactory.getLogger(ReadCircleApplicationTests.class);
-
+//    private static final Logger log = LoggerFactory.getLogger(ReadCircleApplicationTests.class);
+//
 //    @Test
 //    public void getPaymentInfo() {
 //        String impUid = "imp_589204346374";
 //        String url = "https://api.iamport.kr/payments/" + impUid;
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.setBearerAuth(portOneClient.getAccessToken());
-//        System.out.println("토큰값" + portOneClient.getAccessToken());
 //
 //        HttpEntity<Map<String, String>> request = new HttpEntity<>(headers);
 //        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);

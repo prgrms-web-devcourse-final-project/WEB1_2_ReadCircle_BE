@@ -2,12 +2,17 @@ package org.prgrms.devcourse.readcircle.domain.payment.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.prgrms.devcourse.readcircle.common.response.ApiResponse;
+import org.prgrms.devcourse.readcircle.domain.payment.dto.request.CancelPaymentRequest;
 import org.prgrms.devcourse.readcircle.domain.payment.dto.request.PaymentRequest;
-import org.prgrms.devcourse.readcircle.domain.payment.dto.request.PortOneWebhookRequest;
+import org.prgrms.devcourse.readcircle.domain.payment.dto.response.PaymentInfo;
 import org.prgrms.devcourse.readcircle.domain.payment.service.PaymentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/payments")
@@ -16,21 +21,26 @@ import org.springframework.web.bind.annotation.*;
 public class PaymentController {
     private final PaymentService paymentService;
 
-    // 결제 요청 생성
-    @PostMapping("/prepare")
-    public ResponseEntity<String> preparePayment(@RequestBody PaymentRequest paymentRequest, Authentication authentication) {
+    @PostMapping("/process")  // 주문 생성 및 결제 검증 및 결과확인
+    public ResponseEntity<ApiResponse> processPayment(@RequestBody PaymentRequest paymentRequest, Authentication authentication) {
         String userId = authentication.getName();
-        String merchantUid = paymentService.createOrder(paymentRequest, userId);
-        return ResponseEntity.ok(merchantUid);
+        // 1. 주문 생성
+        paymentService.createOrder(paymentRequest, userId);
+
+        // 2. 포트원 결제 정보 검증 및 결제 정보 반환
+        PaymentInfo paymentInfo = paymentService.verifyAndProcessPayment(paymentRequest.getImpUid(), paymentRequest.getMerchantUid());
+
+        // 3. 결과 반환
+        return ResponseEntity.ok(ApiResponse.success(paymentInfo));
     }
 
-    // 웹훅 처리 (포트원 서버에서 호출)
-    @PostMapping("/webhook")
-    @CrossOrigin(origins = "*") // 모든 요청 허용
-    public ResponseEntity<?> handleWebhook(@RequestBody PortOneWebhookRequest webhookRequest) {
-        log.info(webhookRequest.getImpUid());
-        log.info(webhookRequest.getMerchantUid());
-        paymentService.verifyAndProcessPayment(webhookRequest);
-        return ResponseEntity.ok("success");
+    @PostMapping("/cancel")
+    public ResponseEntity<ApiResponse> cancelPayment(@RequestBody CancelPaymentRequest cancelRequest, Authentication authentication) {
+        String userId = authentication.getName();
+
+        // 결제 취소 처리
+        paymentService.cancelOrderPayment(cancelRequest.getMerchantUid(), cancelRequest.getReason(), userId);
+
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

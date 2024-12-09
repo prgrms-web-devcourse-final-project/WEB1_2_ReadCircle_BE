@@ -72,7 +72,6 @@ public class SellerController {
         return ResponseEntity.ok(ApiResponse.success(book));
     }
 
-
     //seller 삭제 - 관리자
     @DeleteMapping("/{sellerId}")
     @PreAuthorize("hasRole('ADMIN')")

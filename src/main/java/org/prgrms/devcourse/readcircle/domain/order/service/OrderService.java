@@ -61,7 +61,7 @@ public class OrderService {
                 .orderStatus(OrderStatus.PENDING)
                 .orderItems(new ArrayList<>())
                 .totalPrice(0)
-                .merchantUid(UUID.randomUUID().toString())
+                .merchantUid(orderRequest.getMerchantUid())
                 .build();
 
         // 주문 상품 리스트 생성
@@ -87,6 +87,7 @@ public class OrderService {
 
         Payment.builder()
                 .order(order)
+                .impUid(orderRequest.getImpUid())
                 .userId(userId)
                 .paymentMethod(orderRequest.getPaymentMethod())
                 .amount(totalPrice)
@@ -112,6 +113,7 @@ public class OrderService {
 
         // 주문 상태 변경
         order.changeOrderStatus(OrderStatus.CANCELED);
+        order.getPayment().changeStatus(PaymentStatus.CANCELLED);
 
         for (OrderItem orderItem : order.getOrderItems()) {
             Book book = orderItem.getBook();
@@ -125,6 +127,7 @@ public class OrderService {
                 order.getDelivery().getId(),  // Delivery의 ID만 저장
                 order.getOrderStatus().name(),  // Enum 값을 String으로 저장
                 order.getTotalPrice(),
+                order.getPayment().getPaymentMethod(),
                 order.getOrderDate(),
                 LocalDateTime.now()  // 취소 일시 기록
         );
@@ -134,6 +137,24 @@ public class OrderService {
         // order 테이블에서 데이터 삭제
         orderRepository.delete(order);
     }
+
+    @Transactional  // 주문 내역 삭제
+    public void deleteOrder(Long orderId, String userId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문이 존재하지 않습니다. ID: " + orderId));
+
+        if(!order.getUser().getUserId().equals(userId)) { throw UserException.NOT_FOUND.get(); }
+
+        for (OrderItem orderItem : order.getOrderItems()) {
+            Book book = orderItem.getBook();
+            // 판매 중 상태로 복구
+            book.changeIsForSale(true);
+        }
+
+        // order 테이블에서 데이터 삭제
+        orderRepository.delete(order);
+    }
+
 
     // 주문 상세 조회
     public OrderResponse getOrderDetails(Long orderId, String userId) {

@@ -11,7 +11,11 @@ public class OrderRequest {
 
     private String address;  // 배송지 주소
 
+    private String impUid;
+
     private String recipientName;
 
     private String paymentMethod;
+
+    private String merchantUid;
 }

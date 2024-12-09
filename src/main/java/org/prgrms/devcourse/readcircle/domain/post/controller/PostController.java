@@ -99,7 +99,7 @@ public class PostController {
 
     //게시글 내용 수정
     @PutMapping("/{postId}")
-    public ResponseEntity<PostDTO> upadte(@PathVariable("postId") Long postId,
+    public ResponseEntity<PostDTO> update(@PathVariable("postId") Long postId,
                                             @RequestBody PostDTO postDTO){
         return ResponseEntity.ok(postServiceImpl.update(postId, postDTO));
     }

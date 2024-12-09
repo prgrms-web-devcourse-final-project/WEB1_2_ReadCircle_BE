@@ -18,16 +18,13 @@ public class Payment extends BaseTimeEntity {
     @Column(name = "payment_id", nullable = false)
     private Long id;
 
+    private String impUid;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     private String userId;
-
-   /* @Column(nullable = true) // 초기에는 null, PG사 결제 성공 시 업데이트
-    private String transactionId;*/
-
-//    private String paymentUid;
 
     @Column(nullable = false)
     private String paymentMethod;
@@ -43,14 +40,13 @@ public class Payment extends BaseTimeEntity {
 
 
     @Builder
-    public Payment(Order order, String userId, String transactionId, String paymentMethod, int amount,
+    public Payment(Order order, String userId, String impUid, String paymentMethod, int amount,
                    String currency, PaymentStatus status) {
         this.order = setOrder(order);
+        this.impUid = impUid;
         this.userId = userId;
-//        this.transactionId = transactionId;
         this.paymentMethod = paymentMethod;
         this.amount = amount;
-//        this.currency = currency;
         this.paymentStatus = status;
     }
 

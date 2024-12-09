@@ -67,11 +67,44 @@ public class PortOneClient {
             log.error("Response body is null");
         } else {
             log.info("Response body: {}", response.getBody());
-            log.info("a:{}", responseData.get("status"));
-            log.info("b:{}", responseData.get("amount"));
         }
 
+        PaymentInfo paymentInfo = new PaymentInfo( (String)responseData.get("merchant_uid"),
+                (String)responseData.get("imp_uid"),
+                (String)responseData.get("buyer_name"),
+                (String)responseData.get("name"),
+                (String)responseData.get("pay_method"),
+                (String)responseData.get("status"),
+                (Integer)responseData.get("amount"),
+                (String)responseData.get("currency"),
+                (String)responseData.get("fail_reason")
+                );
 
-        return new PaymentInfo((String)responseData.get("status"), (Integer) responseData.get("amount"));
+        log.info("paymentInfo : "+paymentInfo);
+
+        return paymentInfo;
     }
+
+    public void cancelPayment(String impUid, String reason) {
+        String url = "https://api.iamport.kr/payments/cancel";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(getAccessToken());
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        // 요청 본문 설정
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("imp_uid", impUid);
+        body.add("reason", reason);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+        ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
+
+        if (response.getStatusCode() != HttpStatus.OK) {
+            throw new RuntimeException("Payment cancellation failed: " + response.getBody());
+        }
+
+        log.info("Payment cancelled successfully for imp_uid: {}", impUid);
+    }
+
+
 }
