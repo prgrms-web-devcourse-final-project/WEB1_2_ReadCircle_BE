@@ -12,7 +12,8 @@ import org.prgrms.devcourse.readcircle.common.enums.BookCategory;
 import org.prgrms.devcourse.readcircle.domain.post.exception.PostException;
 import org.prgrms.devcourse.readcircle.domain.post.repository.PostRepository;
 import org.prgrms.devcourse.readcircle.domain.user.entity.User;
-import org.prgrms.devcourse.readcircle.domain.user.repository.UserFindRepository;
+import org.prgrms.devcourse.readcircle.domain.user.repository.UserRepository;
+import org.prgrms.devcourse.readcircle.domain.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Log4j2
 public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
-    private final UserFindRepository userFindRepository;
     private final PostImageRepository postImageRepository;
+    private final UserService userService;
     private final PagingUtil pagingUtil;
 
     //게시글 등록
@@ -42,7 +43,7 @@ public class PostServiceImpl implements PostService{
             }
 
             //사용자 검사 및 설정
-            User user = userFindRepository.findByUserId(userId).orElseThrow(PostException.NOT_FOUND_USER::getTaskException);
+            User user = userService.findUserByUserId(userId);
             Post savedPost = postDTO.toEntity();
             savedPost.setUser(user);
 
