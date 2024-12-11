@@ -27,12 +27,11 @@ public class PostController {
     public ResponseEntity<PostDTO> create(
             @RequestPart(name = "postDTO") PostDTO postDTO,
             @RequestPart(name = "bookImage") MultipartFile bookImage,
-            @RequestPart(name = "bookAPIImage", required = false) MultipartFile bookAPIImage,
             Authentication authentication
     ) {
         log.info("Received book image: {}", bookImage.getOriginalFilename());  // 로그 추가
         String userId = authentication.getName();
-        PostDTO savedPostDTO = postServiceImpl.register(postDTO, bookImage, bookAPIImage, userId);
+        PostDTO savedPostDTO = postServiceImpl.register(postDTO, bookImage, userId);
         return ResponseEntity.ok(savedPostDTO);
     }
 
@@ -97,7 +96,7 @@ public class PostController {
 
     //게시글 내용 수정
     @PutMapping("/{postId}")
-    public ResponseEntity<PostDTO> upadte(@PathVariable("postId") Long postId,
+    public ResponseEntity<PostDTO> update(@PathVariable("postId") Long postId,
                                             @RequestBody PostDTO postDTO){
         return ResponseEntity.ok(postServiceImpl.update(postId, postDTO));
     }

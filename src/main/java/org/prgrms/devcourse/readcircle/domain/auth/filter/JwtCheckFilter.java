@@ -46,7 +46,8 @@ public class JwtCheckFilter extends OncePerRequestFilter {
                 "/api/books",
                 "/local_image_storage/**",
                 "/post_image_storage/**",
-                "/api/books/detail/{bookId}"
+                "/api/books/detail/{bookId}",
+                "/api/payments/webhook"
         );
 
         // 요청 URI가 제외할 경로 패턴에 매칭되면 필터링을 적용하지 않음
