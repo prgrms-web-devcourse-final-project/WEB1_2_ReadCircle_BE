@@ -2,11 +2,13 @@ package org.prgrms.devcourse.readcircle.common.notification.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.prgrms.devcourse.readcircle.common.notification.dto.MessageDTO;
 import org.prgrms.devcourse.readcircle.common.notification.entity.Notification;
 import org.prgrms.devcourse.readcircle.common.notification.entity.NotificationType;
 import org.prgrms.devcourse.readcircle.common.notification.exception.NotificationException;
 import org.prgrms.devcourse.readcircle.common.notification.repository.NotificationRepository;
 import org.prgrms.devcourse.readcircle.common.notification.dto.NotificationDTO;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +21,10 @@ import java.util.List;
 @Log4j2
 public class NotificationService {
     private final NotificationRepository notificationRepository;
+    private final SseService sseService;
 
     public Notification saveNotification(String toUserId, String message, NotificationType type){
+        MessageDTO messageDTO = new MessageDTO(message);
         try{
             Notification notification = Notification.builder()
                     .toUserId(toUserId)
@@ -28,7 +32,9 @@ public class NotificationService {
                     .type(type)
                     .build();
 
-            notificationRepository.save(notification);
+            Notification noti = notificationRepository.save(notification);
+            sseService.makeNotification(toUserId, noti, messageDTO );
+
             return notification;
         }catch(Exception e){
             log.info(e.getMessage());
@@ -46,5 +52,10 @@ public class NotificationService {
 
         }
         return notifications;
+    }
+
+    @Transactional
+    public void deleteNotifications(){
+        notificationRepository.deleteNotifications();
     }
 }

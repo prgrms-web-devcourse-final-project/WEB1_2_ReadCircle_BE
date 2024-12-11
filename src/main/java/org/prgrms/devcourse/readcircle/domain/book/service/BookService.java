@@ -49,8 +49,8 @@ public class BookService {
     }
 
     // 책 목록 조회
-    public Page<BookResponse> getBooks(Pageable pageable) {
-        return bookRepository.findAll(pageable).map(BookResponse::from);
+    public Page<BookResponse> getBooks(BookProcess process, Pageable pageable) {
+        return bookRepository.findAllByProcess(process, pageable).map(BookResponse::from);
     }
 
     // 책 수정

@@ -2,6 +2,7 @@ package org.prgrms.devcourse.readcircle.domain.book.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.prgrms.devcourse.readcircle.common.enums.BookProcess;
 import org.prgrms.devcourse.readcircle.common.response.ApiResponse;
 import org.prgrms.devcourse.readcircle.domain.book.dto.request.BookCreateRequest;
 import org.prgrms.devcourse.readcircle.domain.book.dto.request.BookUpdateRequest;
@@ -38,9 +39,10 @@ public class BookController {
     // 책 목록 조회
     @GetMapping
     public ResponseEntity<ApiResponse> getAllUsers(
+            @RequestParam(defaultValue = "REGISTRATION") BookProcess book,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<BookResponse> books = bookService.getBooks(PageRequest.of(page, size));
+        Page<BookResponse> books = bookService.getBooks(book, PageRequest.of(page, size));
         return ResponseEntity.ok(ApiResponse.success(books));
     }
 
