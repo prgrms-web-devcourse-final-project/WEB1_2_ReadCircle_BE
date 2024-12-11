@@ -18,16 +18,13 @@ public class Payment extends BaseTimeEntity {
     @Column(name = "payment_id", nullable = false)
     private Long id;
 
+    private String impUid;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    private String userNo;
-
-    @Column(nullable = true) // 초기에는 null, PG사 결제 성공 시 업데이트
-    private String transactionId;
-
-    private String paymentUid;
+    private String userId;
 
     @Column(nullable = false)
     private String paymentMethod;
@@ -35,26 +32,32 @@ public class Payment extends BaseTimeEntity {
     @Column(nullable = false)
     private int amount;
 
-    private String currency;
+//    private String currency;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status; // PENDING, SUCCESS, FAILED, REFUNDED
+    private PaymentStatus paymentStatus; // PENDING, SUCCESS, FAILED, REFUNDED
 
 
     @Builder
-    public Payment(Order order, String transactionId, String paymentMethod, int amount,
+    public Payment(Order order, String userId, String impUid, String paymentMethod, int amount,
                    String currency, PaymentStatus status) {
-        this.order = order;
-        this.transactionId = transactionId;
+        this.order = setOrder(order);
+        this.impUid = impUid;
+        this.userId = userId;
         this.paymentMethod = paymentMethod;
         this.amount = amount;
-        this.currency = currency;
-        this.status = status;
+        this.paymentStatus = status;
+    }
+
+    private Order setOrder(Order order) {
+        this.order = order;
+        order.changePayment(this);
+        return order;
     }
 
     public void changeStatus(PaymentStatus status) {
-        this.status = status;
+        this.paymentStatus = status;
     }
 
 }

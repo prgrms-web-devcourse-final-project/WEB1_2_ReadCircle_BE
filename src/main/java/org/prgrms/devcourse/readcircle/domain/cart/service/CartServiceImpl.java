@@ -65,6 +65,7 @@ public class CartServiceImpl implements CartService{
     @Override
     public void deleteCartItem(Long cartItemId, String userId){
         Cart cart = cartRepository.findByUserId(userId).orElseThrow(CartException.NOT_FOUND_CART_EXCEPTION::getTaskException);
+        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(CartException.NOT_FOUND_CART_ITEM_EXCEPTION::getTaskException);
         try{
             cartItemRepository.deleteById(cartItemId);
         }catch (Exception e){

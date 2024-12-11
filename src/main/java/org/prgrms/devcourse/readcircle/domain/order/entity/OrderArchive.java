@@ -24,16 +24,18 @@ public class OrderArchive {
     private Long deliveryId;  // 연관된 Delivery의 ID만 저장
     private String orderStatus;
     private int totalPrice;
+    private String paymentMethod;
     private LocalDateTime orderDate;
     private LocalDateTime cancelledDate;
 
     @Builder
-    public OrderArchive(Long orderId, Long userNo, Long deliveryId, String orderStatus, int totalPrice, LocalDateTime orderDate, LocalDateTime cancelledDate) {
+    public OrderArchive(Long orderId, Long userNo, Long deliveryId, String orderStatus, int totalPrice, String paymentMethod, LocalDateTime orderDate, LocalDateTime cancelledDate) {
         this.orderId = orderId;
         this.userNo = userNo;
         this.deliveryId = deliveryId;
         this.orderStatus = orderStatus;
         this.totalPrice = totalPrice;
+        this.paymentMethod = paymentMethod;
         this.orderDate = orderDate;
         this.cancelledDate = cancelledDate;
     }

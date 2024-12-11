@@ -8,7 +8,5 @@ public enum DeliveryStatus {
     OUT_FOR_DELIVERY,  // 배달 중 (배송지로 이동)
     DELIVERED,         // 배송 완료
     FAILED,            // 배송 실패 (주소 오류 등)
-    RETURN_REQUESTED,  // 반품 요청
-    RETURNED,          // 반품 완료
     CANCELED           // 배송 취소
 }

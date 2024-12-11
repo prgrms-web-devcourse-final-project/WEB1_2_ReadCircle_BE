@@ -27,6 +27,7 @@ public class Post extends BaseTimeEntity {
     private Long postId;
 
     private String title;
+    @Lob
     private String content;
     private String bookImage;
     private String bookAPIImage;
