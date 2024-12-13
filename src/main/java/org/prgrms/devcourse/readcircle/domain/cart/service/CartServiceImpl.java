@@ -72,4 +72,14 @@ public class CartServiceImpl implements CartService{
             throw CartException.NOT_REMOVED_EXCEPTION.getTaskException();
         }
     }
+
+    @Override
+    public void deleteCart(String userId){
+        Cart cart = cartRepository.findByUserId(userId).orElseThrow(CartException.NOT_FOUND_CART_EXCEPTION::getTaskException);
+        try{
+            cartRepository.deleteById(cart.getCartId());
+        }catch (Exception e){
+            throw CartException.NOT_REMOVED_EXCEPTION.getTaskException();
+        }
+    }
 }

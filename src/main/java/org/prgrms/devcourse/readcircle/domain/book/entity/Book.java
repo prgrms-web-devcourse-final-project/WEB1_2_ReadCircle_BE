@@ -29,6 +29,7 @@ public class Book extends BaseTimeEntity {
 
     private String publisher;
 
+    @Lob
     private String description;
 
     private String isbn;

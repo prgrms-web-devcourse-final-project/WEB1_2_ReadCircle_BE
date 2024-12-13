@@ -2,11 +2,13 @@ package org.prgrms.devcourse.readcircle.domain.auth.config;
 
 import lombok.RequiredArgsConstructor;
 import org.prgrms.devcourse.readcircle.domain.auth.filter.JwtCheckFilter;
+import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,7 +33,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorize -> authorize
-                    .requestMatchers("/api/auth/login", "/api/users/signup", "/api/posts", "/api/books/detail/{bookId}","/api/books", "/local_image_storage/**","/post_image_storage").permitAll()
+                    .requestMatchers("/api/auth/login", "/api/users/signup", "/api/posts", "/api/books/detail/{bookId}","/api/books", "/local_image_storage/**","/post_image_storage/**", "/api/payments/webhook").permitAll()
                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class)
@@ -67,6 +69,12 @@ public class SecurityConfig {
 
         return corsSource;
     }
+
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring()
+//                .requestMatchers("/api/payments/**");
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

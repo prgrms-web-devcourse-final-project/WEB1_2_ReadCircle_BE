@@ -23,24 +23,24 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    // 1. 주문 생성
-    @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createOrder(
-            @RequestBody OrderRequest orderRequest,  // 주문할 상품 목록
-            Authentication authentication
-    ) {
-        String userId = authentication.getName();
-        OrderResponse orderResponse = orderService.createOrder(userId, orderRequest);
-        return ResponseEntity.ok(ApiResponse.success(orderResponse));
-    }
-
-    // 2. 주문 취소 ( 취소된 주문 아카이브 처리 )
-    @PutMapping("/{orderId}/cancel")
-    public ResponseEntity<ApiResponse> cancelOrder(@PathVariable Long orderId, Authentication authentication) {
-        String userId = authentication.getName();
-        orderService.cancelOrder(orderId, userId);
-        return ResponseEntity.ok(ApiResponse.success(null));
-    }
+//    // 1. 주문 생성
+//    @PostMapping("/create")
+//    public ResponseEntity<ApiResponse> createOrder(
+//            @RequestBody OrderRequest orderRequest,  // 주문할 상품 목록
+//            Authentication authentication
+//    ) {
+//        String userId = authentication.getName();
+//        OrderResponse orderResponse = orderService.createOrder(userId, orderRequest);
+//        return ResponseEntity.ok(ApiResponse.success(orderResponse));
+//    }
+//
+//    // 2. 주문 취소 ( 취소된 주문 아카이브 처리 )
+//    @PutMapping("/{orderId}/cancel")
+//    public ResponseEntity<ApiResponse> cancelOrder(@PathVariable Long orderId, Authentication authentication) {
+//        String userId = authentication.getName();
+//        orderService.cancelOrder(orderId, userId);
+//        return ResponseEntity.ok(ApiResponse.success(null));
+//    }
 
     // 3. 주문 상세 조회 ( 취소된 주문은 볼 수 없음 )
     @GetMapping("/{orderId}/me")
