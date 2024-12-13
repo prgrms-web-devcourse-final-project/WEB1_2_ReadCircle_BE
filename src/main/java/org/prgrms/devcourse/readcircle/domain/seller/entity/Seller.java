@@ -36,8 +36,6 @@ public class Seller extends BaseTimeEntity {
     @NotBlank
     private String accountOwner;
 
-    private int depositAmount;
-
     public Seller(Book book, String userId, String bank, String account, String accountOwner) {
         this.userId = userId;
         this.book = book;
@@ -45,7 +43,5 @@ public class Seller extends BaseTimeEntity {
         this.account = account;
         this.accountOwner = accountOwner;
     }
-
-    public void changeDepositAmount(int depositAmount){ this.depositAmount = depositAmount; }
 
 }
