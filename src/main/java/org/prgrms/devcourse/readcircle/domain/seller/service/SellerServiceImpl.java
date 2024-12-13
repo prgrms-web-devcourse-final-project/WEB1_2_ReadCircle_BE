@@ -98,7 +98,6 @@ public class SellerServiceImpl implements SellerService{
         Seller seller = sellerRepository.findById(sellerId).orElseThrow(SellerException.NOT_FOUND_SELLER_EXCEPTION::getTaskException);
         Book response = seller.getBook();
         try{
-            seller.changeDepositAmount(pricingDTO.getDepositAmount());
             BookUpdateRequest request = new BookUpdateRequest(
                     response.getTitle(),
                     response.getCategory(),
@@ -109,7 +108,7 @@ public class SellerServiceImpl implements SellerService{
                     response.getDescription(),
                     response.getThumbnailUrl(),
                     pricingDTO.getBookCondition(),
-                    response.getPrice(),
+                    pricingDTO.getPrice(),
                     pricingDTO.getProcess(),
                     response.isForSale()
             );
@@ -129,7 +128,7 @@ public class SellerServiceImpl implements SellerService{
 
     @Override
     public void delete(Long sellerId){
-        Seller seller = sellerRepository.findById(sellerId).orElseThrow(SellerException.NOT_FOUND_SELLER_EXCEPTION::getTaskException);
+        sellerRepository.findById(sellerId).orElseThrow(SellerException.NOT_FOUND_SELLER_EXCEPTION::getTaskException);
         try{
             sellerRepository.deleteById(sellerId);
         } catch(Exception e){

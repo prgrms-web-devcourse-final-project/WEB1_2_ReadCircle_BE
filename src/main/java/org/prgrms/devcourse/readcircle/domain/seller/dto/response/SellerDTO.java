@@ -13,7 +13,6 @@ public class SellerDTO {
     private String bank;
     private String account;
     private String accountOwner;
-    private int depositAmount;
 
     public SellerDTO(Seller seller) {
         this.sellerId = seller.getSellerId();
@@ -22,6 +21,5 @@ public class SellerDTO {
         this.bank = seller.getBank();
         this.account = seller.getAccount();
         this.accountOwner = seller.getAccountOwner();
-        this.depositAmount = seller.getDepositAmount();
     }
 }
