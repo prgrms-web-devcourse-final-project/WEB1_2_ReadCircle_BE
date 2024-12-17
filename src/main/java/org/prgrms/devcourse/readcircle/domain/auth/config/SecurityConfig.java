@@ -33,7 +33,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorize -> authorize
-                    .requestMatchers("/api/auth/login", "/api/users/signup", "/api/posts", "/api/books/detail/{bookId}","/api/books", "/local_image_storage/**","/post_image_storage/**", "/api/payments/webhook").permitAll()
+                    .requestMatchers("/api/auth/login", "/api/users/signup", "/api/posts", "/api/books/detail/{bookId}","/api/books", "/local_image_storage/**","/post_image_storage/**", "/api/payments/webhook", "/api/wish").permitAll()
                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class)
