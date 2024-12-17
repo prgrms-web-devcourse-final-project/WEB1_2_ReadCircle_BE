@@ -37,8 +37,8 @@ public class WishController {
 
     @GetMapping("/list")
     public ResponseEntity<ApiResponse> getWishList(
-//            @RequestParam(required = false, defaultValue = "0") int page,
-//            @RequestParam(required = false, defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size,
             Authentication authentication
     ){
         String userId = authentication.getName();
@@ -46,14 +46,6 @@ public class WishController {
         return ResponseEntity.ok(ApiResponse.success(wishList));
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse> getWish(
-            Authentication authentication
-    ){
-        String userId = authentication.getName();
-        List<WishDTO> wishs = wishService.wishs(userId);
-        return ResponseEntity.ok(ApiResponse.success(wishs));
-    }
 
     @DeleteMapping
     public ResponseEntity<ApiResponse> deleteWish(

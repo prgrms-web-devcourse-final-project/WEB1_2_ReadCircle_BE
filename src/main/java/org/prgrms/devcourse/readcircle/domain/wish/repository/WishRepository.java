@@ -20,11 +20,6 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
     @Query("SELECT w FROM Wish w JOIN FETCH w.user u WHERE u.userId = :userId")
     Page<Wish> getWishListByUserId(String userId, Pageable pageable);
 
-
-    @Query("SELECT w FROM Wish w JOIN FETCH w.user u WHERE u.userId = :userId")
-    List<Wish> getWishs(String userId);
-
-
     @Query("SELECT w FROM Wish w WHERE w.post = :post AND w.user = :user")
     Optional<Wish> findWishPost(Post post, User user);
 

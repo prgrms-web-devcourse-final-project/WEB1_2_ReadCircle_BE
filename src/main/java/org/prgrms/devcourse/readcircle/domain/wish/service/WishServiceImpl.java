@@ -81,10 +81,6 @@ public class WishServiceImpl implements WishService {
         return wishList.map(WishDTO::new);
     }
 
-    public List<WishDTO> wishs(String userId){
-        List<Wish> wishs = wishRepository.getWishs(userId);
-        return wishs.stream().map(WishDTO::new).toList();
-    }
     @Override
     public void deleteWish(Long wishId){
         try{
